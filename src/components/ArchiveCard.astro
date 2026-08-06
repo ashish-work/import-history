@@ -8,6 +8,9 @@ interface Props {
   href?: string;
 }
 const { from = 'SOURCE-NEEDED', date = 'SOURCE-NEEDED', subject = 'SOURCE-NEEDED', href } = Astro.props;
+// A card with a linked source but no excerpt is a complete citation — no body.
+// The SOURCE-NEEDED body fallback only appears on true scaffolds (no href).
+const showBody = Astro.slots.has('default') || !href;
 ---
 <div class="archive-card pixel-border">
   <div class="titlebar" aria-hidden="true">
@@ -19,9 +22,11 @@ const { from = 'SOURCE-NEEDED', date = 'SOURCE-NEEDED', subject = 'SOURCE-NEEDED
     <div><dt>Date:</dt><dd>{date}</dd></div>
     <div><dt>Subject:</dt><dd>{subject}</dd></div>
   </dl>
-  <div class="body">
-    <slot>SOURCE-NEEDED</slot>
-  </div>
+  {showBody && (
+    <div class="body">
+      <slot>SOURCE-NEEDED</slot>
+    </div>
+  )}
   {href && <a class="source" href={href}>→ primary source</a>}
 </div>
 

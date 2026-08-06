@@ -25,7 +25,7 @@ const rows = items ?? ['3.10', '3.11', '3.12', '3.13', '3.14'].map((label) => ({
               <span class={`cell ${i < filled ? 'fill' : ''}`}></span>
             ))}
           </span>
-          <span class="bar-value">{items ? `${row.value}×` : 'SOURCE-NEEDED'}</span>
+          <span class="bar-value">{items ? `${row.value}×` : '—'}</span>
         </div>
       );
     })}

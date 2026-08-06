@@ -1,0 +1,19 @@
+{
+  "name": "import-history",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "verify-check": "node scripts/verify-check.mjs"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^7.0.5",
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "^7.1.6",
+    "gsap": "^3.15.0",
+    "tailwindcss": "^4.3.3"
+  }
+}

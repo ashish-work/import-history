@@ -1,0 +1,159 @@
+---
+import '../styles/global.css';
+import PixelSnake from '../components/PixelSnake.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'import history',
+  description = "An 8-bit documentary about Python's evolution — the fights, the people, and the industry pressure behind every feature.",
+} = Astro.props;
+
+const PROGRESS_BLOCKS = 10;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&family=Press+Start+2P&family=VT323&display=swap"
+    />
+    <title>{title}</title>
+  </head>
+  <body>
+    <div class="crt-overlay" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <a href="/" class="site-mark">
+        <PixelSnake size={24} />
+        <span class="site-title cursor">import history</span>
+      </a>
+      <div
+        class="progress-bar"
+        role="progressbar"
+        aria-label="page scroll progress"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        aria-valuenow="0"
+      >
+        {Array.from({ length: PROGRESS_BLOCKS }).map(() => <span class="progress-block"></span>)}
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <button type="button" class="crt-toggle" aria-pressed="true">CRT: ON</button>
+      <span class="colophon">COLOPHON [ IN PRODUCTION ]</span>
+    </footer>
+
+    <style>
+      .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: var(--bg);
+        border-bottom: 2px solid var(--surface);
+        padding: calc(var(--grid) * 2);
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: calc(var(--grid) * 2);
+      }
+      .site-mark {
+        display: flex;
+        align-items: center;
+        gap: var(--grid);
+        text-decoration: none;
+        color: var(--ink);
+      }
+      .site-mark:hover {
+        background: transparent;
+        color: var(--py-yellow);
+      }
+      .site-title {
+        font-family: var(--font-display);
+        font-size: 12px;
+      }
+      .progress-bar {
+        display: flex;
+        gap: calc(var(--grid) / 2);
+        margin-left: auto;
+      }
+      .progress-block {
+        width: var(--grid);
+        height: calc(var(--grid) * 2);
+        border: 2px solid var(--dim);
+      }
+      .progress-block.filled {
+        background: var(--phosphor);
+        border-color: var(--phosphor);
+      }
+      main {
+        padding: calc(var(--grid) * 2);
+        max-width: 68ch;
+        margin: 0 auto;
+      }
+      .site-footer {
+        border-top: 2px solid var(--surface);
+        padding: calc(var(--grid) * 2);
+        display: flex;
+        align-items: center;
+        gap: calc(var(--grid) * 3);
+        font-family: var(--font-terminal);
+        font-size: 20px;
+        color: var(--dim);
+      }
+      .crt-toggle {
+        font-family: var(--font-terminal);
+        font-size: 20px;
+        background: var(--surface);
+        color: var(--ink);
+        border: 2px solid var(--ink);
+        padding: var(--grid) calc(var(--grid) * 2);
+        min-height: 44px;
+        cursor: pointer;
+        transition: background-color 120ms steps(2, end), color 120ms steps(2, end);
+      }
+      .crt-toggle:hover {
+        background: var(--ink);
+        color: var(--bg);
+      }
+    </style>
+
+    <script>
+      // Scroll progress: fill blocks like a health bar
+      const bar = document.querySelector('.progress-bar');
+      const blocks = document.querySelectorAll('.progress-block');
+      const updateProgress = () => {
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        const pct = max > 0 ? Math.min(1, window.scrollY / max) : 0;
+        const filled = Math.round(pct * blocks.length);
+        blocks.forEach((b, i) => b.classList.toggle('filled', i < filled));
+        bar?.setAttribute('aria-valuenow', String(Math.round(pct * 100)));
+      };
+      window.addEventListener('scroll', updateProgress, { passive: true });
+      window.addEventListener('resize', updateProgress, { passive: true });
+      updateProgress();
+
+      // CRT overlay toggle
+      const toggle = document.querySelector('.crt-toggle');
+      toggle?.addEventListener('click', () => {
+        const off = document.body.classList.toggle('no-crt');
+        toggle.textContent = off ? 'CRT: OFF' : 'CRT: ON';
+        toggle.setAttribute('aria-pressed', String(!off));
+      });
+    </script>
+  </body>
+</html>

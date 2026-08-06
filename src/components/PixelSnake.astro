@@ -1,0 +1,29 @@
+---
+// Original 24×24 pixel-art snake (deliberately not the official Python logo).
+const { size = 24 } = Astro.props;
+---
+<svg
+  width={size}
+  height={size}
+  viewBox="0 0 24 24"
+  shape-rendering="crispEdges"
+  role="img"
+  aria-label="pixel snake"
+>
+  <!-- body: S-shape in Python blue, 3px cells on the 8×8 grid -->
+  <g fill="var(--py-blue, #4b8bbe)">
+    <rect x="6" y="3" width="12" height="3" />
+    <rect x="15" y="6" width="3" height="3" />
+    <rect x="6" y="9" width="12" height="3" />
+    <rect x="6" y="12" width="3" height="3" />
+    <rect x="6" y="15" width="12" height="3" />
+    <rect x="15" y="18" width="3" height="3" />
+  </g>
+  <!-- head + tail tip in Python yellow -->
+  <g fill="var(--py-yellow, #ffd43b)">
+    <rect x="3" y="3" width="3" height="3" />
+    <rect x="18" y="18" width="3" height="3" />
+  </g>
+  <!-- eye -->
+  <rect x="4" y="4" width="1" height="1" fill="var(--bg, #0b0d10)" />
+</svg>

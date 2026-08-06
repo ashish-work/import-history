@@ -1,0 +1,129 @@
+@import "tailwindcss";
+
+/* ── PHOSPHOR tokens ─────────────────────────────────────────── */
+:root {
+  --bg: #0b0d10;
+  --surface: #12151a;
+  --ink: #e6eee6;
+  --dim: #8a978a;
+  --phosphor: #3dff7c;
+  --amber: #ffb000;
+  --py-blue: #4b8bbe;
+  --py-yellow: #ffd43b;
+  --alert: #ff5555;
+  --grid: 8px;
+
+  --font-display: "Press Start 2P", monospace;
+  --font-terminal: "VT323", monospace;
+  --font-body: "IBM Plex Mono", monospace;
+}
+
+/* Map Tailwind theme to the tokens */
+@theme {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-dim: var(--dim);
+  --color-phosphor: var(--phosphor);
+  --color-amber: var(--amber);
+  --color-py-blue: var(--py-blue);
+  --color-py-yellow: var(--py-yellow);
+  --color-alert: var(--alert);
+
+  --font-display: "Press Start 2P", monospace;
+  --font-terminal: "VT323", monospace;
+  --font-body: "IBM Plex Mono", monospace;
+
+  --spacing: 8px; /* every Tailwind spacing step is a multiple of the 8px grid */
+}
+
+/* ── Base ────────────────────────────────────────────────────── */
+html {
+  background: var(--bg);
+  color: var(--ink);
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.75;
+  margin: 0;
+  min-height: 100vh;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  line-height: 1.6;
+}
+
+a {
+  color: var(--py-blue);
+  text-decoration: underline;
+  transition: background-color 120ms steps(2, end), color 120ms steps(2, end);
+}
+a:hover {
+  background: var(--py-blue);
+  color: var(--bg);
+}
+
+/* Visible keyboard focus — accessibility floor */
+:focus-visible {
+  outline: 2px solid var(--py-yellow);
+  outline-offset: 2px;
+}
+
+/* ── Chrome ──────────────────────────────────────────────────── */
+.pixel-border {
+  border: 2px solid var(--ink);
+  box-shadow: 6px 6px 0 var(--ink);
+}
+
+/* Blinking block cursor */
+.cursor::after {
+  content: "▮";
+  animation: blink 1s steps(2, jump-none) infinite;
+}
+@keyframes blink {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* CRT overlay — static scanlines + subtle vignette */
+.crt-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.35) 0px,
+      rgba(0, 0, 0, 0.35) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+  opacity: 0.1;
+}
+.crt-overlay::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 60%, rgba(0, 0, 0, 0.25) 100%);
+}
+body.no-crt .crt-overlay {
+  display: none;
+}
+
+/* ── Reduced motion: everything jumps to its final state ─────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .cursor::after {
+    animation: none;
+    opacity: 1;
+  }
+}

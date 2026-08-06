@@ -1,0 +1,52 @@
+---
+import PageShell from '../layouts/PageShell.astro';
+---
+<PageShell>
+  <section class="hero">
+    <p class="stamp">[ SIGNAL ACQUIRED ▮ ]</p>
+    <h1>import history</h1>
+    <p class="subtitle">An 8-bit documentary about Python's evolution.</p>
+  </section>
+
+  <section class="thesis pixel-border">
+    <p>
+      <strong>Language features are lagging indicators of industry pressure.</strong>
+      Python never added anything because it was elegant — every feature is a delayed
+      response to something happening outside the language.
+    </p>
+  </section>
+
+  <!-- M1: DualTimeline + episode grid land here -->
+
+  <style>
+    .hero {
+      padding: calc(var(--grid) * 8) 0 calc(var(--grid) * 4);
+    }
+    .stamp {
+      font-family: var(--font-terminal);
+      font-size: 20px;
+      color: var(--amber);
+      margin: 0 0 calc(var(--grid) * 2);
+    }
+    h1 {
+      font-size: 24px;
+      color: var(--phosphor);
+      margin: 0 0 calc(var(--grid) * 2);
+    }
+    .subtitle {
+      color: var(--dim);
+      margin: 0;
+    }
+    .thesis {
+      background: var(--surface);
+      padding: calc(var(--grid) * 3);
+      margin: calc(var(--grid) * 4) 0 calc(var(--grid) * 8);
+    }
+    .thesis p {
+      margin: 0;
+    }
+    .thesis strong {
+      color: var(--py-yellow);
+    }
+  </style>
+</PageShell>

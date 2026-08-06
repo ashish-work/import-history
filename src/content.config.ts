@@ -10,6 +10,7 @@ const episodes = defineCollection({
       era: z.string(),
       status: z.enum(['full', 'stub']),
       accent: z.enum(['phosphor', 'amber', 'py-blue', 'py-yellow']),
+      intro: z.string().optional(),
       image: image().optional(),
     }),
 });

@@ -25,13 +25,34 @@ const posterFor = (slug: string) => posters[`../content/episodes/${slug}.png`]?.
     </p>
   </section>
 
+  <section class="about">
+    <p>
+      This is an eight-episode documentary about how Python became what it is.
+      Not a syntax tutorial — the fights, the people, and the industry pressure
+      behind every feature. Why indentation is syntax, why the GIL existed for
+      thirty-four years, why your code looks the way it does. Start at episode
+      1, or jump in at the era that left scars on you.
+    </p>
+  </section>
+
   <section aria-label="Dual timeline: the industry vs Python releases">
     <h2>THE PRESSURE LINE</h2>
+    <p class="section-intro">
+      Two columns, one clock. The left column is what the industry did; the
+      right is what Python shipped. Read them together and the thesis appears:
+      the language answers years after the world asks. The colored bands mark
+      each episode's era — follow one into its story.
+    </p>
     <DualTimeline />
   </section>
 
   <section aria-label="Episodes">
     <h2>EPISODES</h2>
+    <p class="section-intro">
+      Eight eras, one argument. Every episode follows the same arc: what the
+      world was doing, the pressure it put on Python, what the language shipped
+      in response, and the fight it took to get there.
+    </p>
     <ol class="ep-grid">
       {episodes.map((e) => (
         <li>
@@ -93,6 +114,15 @@ const posterFor = (slug: string) => posters[`../content/episodes/${slug}.png`]?.
     }
     .thesis p { margin: 0; }
     .thesis strong { color: var(--py-yellow); }
+
+    .about p {
+      margin: 0 0 calc(var(--grid) * 2);
+      color: var(--ink);
+    }
+    .section-intro {
+      color: var(--dim);
+      margin: 0 0 calc(var(--grid) * 3);
+    }
 
     .ep-grid {
       list-style: none;

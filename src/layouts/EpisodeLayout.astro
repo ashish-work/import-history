@@ -10,9 +10,10 @@ interface Props {
   era: string;
   accent: string;
   status: 'full' | 'stub';
+  intro?: string;
   image?: ImageMetadata;
 }
-const { number, title, era, accent, status, image } = Astro.props;
+const { number, title, era, accent, status, intro, image } = Astro.props;
 const num = String(number).padStart(2, '0');
 const next = episodes.find((e) => e.number === number + 1);
 ---
@@ -22,6 +23,7 @@ const next = episodes.find((e) => e.number === number + 1);
       <p class="ep-num">EPISODE {num}</p>
       <h1>{title}</h1>
       <p class="ep-era">{era}</p>
+      {intro && <p class="ep-intro">{intro}</p>}
       {image && (
         <Image
           src={image}
@@ -73,6 +75,13 @@ const next = episodes.find((e) => e.number === number + 1);
     font-family: var(--font-terminal);
     font-size: 20px;
     color: var(--dim);
+    margin: 0 0 calc(var(--grid) * 4);
+  }
+  .ep-intro {
+    font-size: 17px;
+    color: var(--dim);
+    border-left: 4px solid var(--accent);
+    padding-left: calc(var(--grid) * 2);
     margin: 0 0 calc(var(--grid) * 4);
   }
   .ep-poster {

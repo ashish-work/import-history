@@ -8,6 +8,7 @@ accent: py-yellow
 import ColdOpen from '../../components/ColdOpen.astro';
 import ArchiveCard from '../../components/ArchiveCard.astro';
 import Verify from '../../components/Verify.astro';
+import GiftDiagram from '../../components/GiftDiagram.astro';
 
 <ColdOpen
   stamp="A quant desk at AQR Capital, 2008."
@@ -46,7 +47,7 @@ import Verify from '../../components/Verify.astro';
 {/* TODO: human prose — THE THESIS CHAPTER. The mechanism, stated plainly: C extensions release the GIL. NumPy dives below the lock; other threads run; the meter climbs. The GIL forced heavy compute below the line → a world-class C/Fortran ecosystem accreted → science chose Python because of that ecosystem. */}
 {/* TODO: human prose — why import numpy as np is the real Python logo; why your "Python" hot loop is actually BLAS; why @ exists (PEP 465 — the ecosystem now steers the core; forward-ref to ep 8). */}
 
-{/* M5: GiftDiagram mounts here — thin Python layer, fat C/BLAS blocks, GIL bar spanning only the Python layer. */}
+<GiftDiagram />
 
 ## Sources
 

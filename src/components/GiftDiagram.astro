@@ -1,0 +1,108 @@
+---
+// Ep 4: the Accidental Gift. Thin Python layer, fat C/BLAS blocks below,
+// GIL bar spanning only the Python layer. Scrubbed: call drops below the
+// line → GIL bar fades → blocked sprites light up → meter fills.
+const SEGS = Array.from({ length: 10 });
+---
+<figure class="gift-wrap">
+  <svg
+    viewBox="0 0 640 400"
+    shape-rendering="crispEdges"
+    role="img"
+    aria-label="Layer diagram: a thin Python layer above fat C and BLAS blocks; the GIL bar only spans the Python layer"
+  >
+    <!-- GIL bar: spans ONLY the Python layer -->
+    <g class="gil-bar">
+      <rect x="40" y="48" width="448" height="16" fill="var(--amber)" />
+      <text x="264" y="61" text-anchor="middle" font-family="'Press Start 2P', monospace" font-size="10" fill="var(--bg)">GIL</text>
+    </g>
+
+    <!-- thin Python layer -->
+    <rect x="40" y="72" width="448" height="48" fill="var(--surface)" stroke="var(--py-blue)" stroke-width="2" />
+    <text x="56" y="100" font-family="'Press Start 2P', monospace" font-size="12" fill="var(--py-blue)">PYTHON</text>
+
+    <!-- blocked thread sprites waiting in the Python layer -->
+    {[280, 344, 408].map((x) => (
+      <g class="waiter" transform={`translate(${x} 80) scale(2)`} color="var(--dim)">
+        <rect x="4" y="0" width="8" height="4" fill="currentColor" />
+        <rect x="2" y="4" width="12" height="6" fill="currentColor" />
+        <rect x="2" y="10" width="4" height="6" fill="currentColor" />
+        <rect x="10" y="10" width="4" height="6" fill="currentColor" />
+      </g>
+    ))}
+
+    <!-- the line -->
+    <line x1="40" y1="128" x2="488" y2="128" stroke="var(--dim)" stroke-width="2" stroke-dasharray="8 8" />
+    <text x="488" y="144" text-anchor="end" font-family="VT323, monospace" font-size="20" fill="var(--dim)">below the line: no GIL</text>
+
+    <!-- fat C/BLAS blocks -->
+    <rect x="40" y="152" width="448" height="104" fill="var(--surface)" stroke="var(--phosphor)" stroke-width="2" />
+    <text x="56" y="212" font-family="'Press Start 2P', monospace" font-size="12" fill="var(--phosphor)">C EXTENSIONS</text>
+    <rect x="40" y="264" width="448" height="104" fill="var(--surface)" stroke="var(--phosphor)" stroke-width="2" />
+    <text x="56" y="324" font-family="'Press Start 2P', monospace" font-size="12" fill="var(--phosphor)">BLAS / FORTRAN</text>
+
+    <!-- the call: drops below the line on scrub -->
+    <rect class="call" x="80" y="88" width="16" height="16" fill="var(--py-yellow)" />
+
+    <!-- CPU meter -->
+    <g class="meter">
+      {SEGS.map((_, i) => (
+        <rect class="seg" data-seg={i} x="552" width="48" height="24" y={368 - 8 - i * 32} fill="var(--phosphor)" opacity={i === 0 ? 1 : 0.12} />
+      ))}
+    </g>
+    <text x="576" y="24" text-anchor="middle" font-family="'Press Start 2P', monospace" font-size="12" fill="var(--dim)">CPU</text>
+  </svg>
+  <figcaption>
+    <slot>The call dives below the line; the lock only ever covered the thin layer.</slot>
+  </figcaption>
+</figure>
+
+<style>
+  .gift-wrap {
+    margin: calc(var(--grid) * 6) 0;
+  }
+  svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 2px solid var(--surface);
+  }
+  figcaption {
+    font-family: var(--font-terminal);
+    font-size: 20px;
+    color: var(--dim);
+    padding-top: var(--grid);
+  }
+</style>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  document.querySelectorAll<HTMLElement>('.gift-wrap').forEach((wrap) => {
+    const q = gsap.utils.selector(wrap);
+    const segs = q('.seg').filter((s) => Number((s as SVGElement).dataset.seg) > 0);
+
+    const tl = gsap.timeline({ paused: true });
+    tl.to(q('.call'), { y: 128, duration: 0.3, ease: 'steps(4)' }, 0);
+    tl.to(q('.gil-bar'), { opacity: 0.4, duration: 0.1, ease: 'steps(1)' }, 0.3);
+    tl.to(q('.waiter'), { color: 'var(--phosphor)', duration: 0.1, ease: 'steps(1)', stagger: 0.08 }, 0.4);
+    tl.to(segs, { opacity: 1, duration: 0.3, ease: 'steps(1)', stagger: 0.03 }, 0.5);
+
+    if (reduced) {
+      tl.progress(1);
+      return;
+    }
+    ScrollTrigger.create({
+      trigger: wrap,
+      start: 'top 80%',
+      end: 'top 20%',
+      scrub: true,
+      onUpdate: (self) => tl.progress(self.progress),
+    });
+  });
+</script>

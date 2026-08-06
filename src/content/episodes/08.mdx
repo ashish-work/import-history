@@ -8,6 +8,7 @@ accent: py-yellow
 import ColdOpen from '../../components/ColdOpen.astro';
 import ArchiveCard from '../../components/ArchiveCard.astro';
 import Verify from '../../components/Verify.astro';
+import SpeedBars from '../../components/SpeedBars.astro';
 
 <ColdOpen
   stamp="November 2020."
@@ -49,7 +50,7 @@ import Verify from '../../components/Verify.astro';
 {/* TODO: human prose — why python3.13t exists; why some wheels ship two builds; why your NumPy/PyTorch upgrade notes mention free-threading; why "is the GIL gone?" is now a version question, not a yes/no. */}
 
 {/* M6: GilMachine states B→C mounts here — the padlock dissolves, four lanes light simultaneously, meter climbs to 100%. Same component as ep 1/3, one prop changed. */}
-{/* M5: SpeedBars mounts here — 3.10 → 3.14 relative performance. Numbers come from the human, cited. */}
+<SpeedBars />
 <p><Verify>current pyperformance geomean numbers, 3.10 → 3.14</Verify></p>
 
 ## Sources

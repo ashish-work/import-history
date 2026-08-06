@@ -1,0 +1,105 @@
+---
+// Ep 8: 3.10 → 3.14 relative performance. Numbers come from the human, never
+// from memory — with no data prop this renders an honest AWAITING DATA state.
+interface Item {
+  label: string;
+  value: number; // relative speed, e.g. 1.0 for baseline
+}
+interface Props {
+  items?: Item[];
+}
+const { items } = Astro.props;
+const max = items ? Math.max(...items.map((i) => i.value)) : 1;
+const TRACK = 20; // segments per track
+const rows = items ?? ['3.10', '3.11', '3.12', '3.13', '3.14'].map((label) => ({ label, value: 0 }));
+---
+<figure class="speed-wrap">
+  <div class="bars">
+    {rows.map((row) => {
+      const filled = Math.round((row.value / max) * TRACK);
+      return (
+        <div class="bar-row">
+          <span class="bar-label">{row.label}</span>
+          <span class="track">
+            {Array.from({ length: TRACK }).map((_, i) => (
+              <span class={`cell ${i < filled ? 'fill' : ''}`}></span>
+            ))}
+          </span>
+          <span class="bar-value">{items ? `${row.value}×` : 'SOURCE-NEEDED'}</span>
+        </div>
+      );
+    })}
+  </div>
+  {!items && <p class="awaiting">[ AWAITING DATA — numbers must be cited, not remembered ]</p>}
+  <p class="citation"><slot name="citation">Citation: SOURCE-NEEDED</slot></p>
+</figure>
+
+<style>
+  .speed-wrap {
+    margin: calc(var(--grid) * 6) 0;
+    font-family: var(--font-terminal);
+    font-size: 20px;
+  }
+  .bar-row {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--grid) * 2);
+    margin: calc(var(--grid) * 2) 0;
+  }
+  .bar-label {
+    min-width: calc(var(--grid) * 6);
+    color: var(--ink);
+  }
+  .track {
+    display: flex;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+  }
+  .cell {
+    width: var(--grid);
+    height: calc(var(--grid) * 2);
+    background: var(--surface);
+    flex-shrink: 1;
+  }
+  .cell.fill {
+    background: var(--py-yellow);
+    opacity: 0;
+  }
+  .speed-wrap.in .cell.fill {
+    animation: seg-on 0.6s steps(6, end) forwards;
+  }
+  @keyframes seg-on {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  .bar-value {
+    min-width: calc(var(--grid) * 14);
+    color: var(--py-yellow);
+    text-align: right;
+  }
+  .awaiting {
+    color: var(--amber);
+    margin: calc(var(--grid) * 2) 0 0;
+  }
+  .citation {
+    color: var(--dim);
+    font-size: 17px;
+    margin: var(--grid) 0 0;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cell.fill { opacity: 1; }
+  }
+</style>
+
+<script>
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.4 });
+  document.querySelectorAll('.speed-wrap').forEach((el) => io.observe(el));
+</script>

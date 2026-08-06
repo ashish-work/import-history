@@ -1,0 +1,96 @@
+---
+// Concurrency genealogy: implicit trunk (phosphor) vs explicit trunk (py-blue),
+// drawn on with scrubbed stroke-dashoffset in chunky steps.
+// M5 ships the top half (ep 3); the bottom half continues in ep 6.
+// Year labels only where content-outline.md states them.
+const GREEN = [
+  { y: 64, label: 'Stackless', year: '~1999' },
+  { y: 168, label: 'greenlet', year: '' },
+  { y: 272, label: 'eventlet', year: '' },
+  { y: 376, label: 'gevent', year: '2009' },
+];
+const BLUE = [
+  { y: 64, label: 'Medusa', year: '' },
+  { y: 168, label: 'Twisted', year: '' },
+  { y: 272, label: 'generators', year: '2001' },
+  { y: 376, label: 'generator.send()', year: '2006' },
+];
+---
+<figure class="tree-wrap">
+  <svg
+    viewBox="0 0 640 440"
+    shape-rendering="crispEdges"
+    role="img"
+    aria-label="Two-trunk genealogy: the implicit concurrency line (Stackless to gevent) and the explicit line (Medusa to generator.send)"
+  >
+    <text x="152" y="32" text-anchor="middle" font-family="'Press Start 2P', monospace" font-size="10" fill="var(--phosphor)">IMPLICIT</text>
+    <text x="440" y="32" text-anchor="middle" font-family="'Press Start 2P', monospace" font-size="10" fill="var(--py-blue)">EXPLICIT</text>
+
+    <line class="trunk trunk-green" x1="152" y1="64" x2="152" y2="376" stroke="var(--phosphor)" stroke-width="4" />
+    <line class="trunk trunk-blue" x1="440" y1="64" x2="440" y2="376" stroke="var(--py-blue)" stroke-width="4" />
+
+    {GREEN.map((n) => (
+      <g class="node">
+        <rect x="148" y={n.y - 4} width="8" height="8" fill="var(--phosphor)" />
+        <text x="168" y={n.y + 6} font-family="VT323, monospace" font-size="22" fill="var(--ink)">{n.label}</text>
+        {n.year && <text x="136" y={n.y + 6} text-anchor="end" font-family="VT323, monospace" font-size="20" fill="var(--dim)">{n.year}</text>}
+      </g>
+    ))}
+    {BLUE.map((n) => (
+      <g class="node">
+        <rect x="436" y={n.y - 4} width="8" height="8" fill="var(--py-blue)" />
+        <text x="456" y={n.y + 6} font-family="VT323, monospace" font-size="22" fill="var(--ink)">{n.label}</text>
+        {n.year && <text x="424" y={n.y + 6} text-anchor="end" font-family="VT323, monospace" font-size="20" fill="var(--dim)">{n.year}</text>}
+      </g>
+    ))}
+
+    <text x="320" y="424" text-anchor="middle" font-family="VT323, monospace" font-size="20" fill="var(--dim)">the tree continues in episode 6 →</text>
+  </svg>
+</figure>
+
+<style>
+  .tree-wrap {
+    margin: calc(var(--grid) * 6) 0;
+  }
+  svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 2px solid var(--surface);
+  }
+</style>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const TRUNK_LEN = 312;
+
+  document.querySelectorAll<HTMLElement>('.tree-wrap').forEach((wrap) => {
+    const q = gsap.utils.selector(wrap);
+    const trunks = q('.trunk');
+    trunks.forEach((t) => {
+      (t as SVGElement).setAttribute('stroke-dasharray', String(TRUNK_LEN));
+      (t as SVGElement).setAttribute('stroke-dashoffset', String(TRUNK_LEN));
+    });
+
+    const tl = gsap.timeline({ paused: true });
+    tl.to(trunks, { strokeDashoffset: 0, duration: 0.7, ease: 'steps(8)' }, 0);
+    tl.from(q('.node'), { opacity: 0, duration: 0.1, ease: 'steps(1)', stagger: 0.08 }, 0.1);
+
+    if (reduced) {
+      tl.progress(1);
+      return;
+    }
+    ScrollTrigger.create({
+      trigger: wrap,
+      start: 'top 80%',
+      end: 'top 20%',
+      scrub: true,
+      onUpdate: (self) => tl.progress(self.progress),
+    });
+  });
+</script>

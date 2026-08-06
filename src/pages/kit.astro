@@ -8,6 +8,9 @@ import EraBanner from '../components/EraBanner.astro';
 import Verify from '../components/Verify.astro';
 import DualTimeline from '../components/DualTimeline.astro';
 import GilMachine from '../components/GilMachine.astro';
+import GiftDiagram from '../components/GiftDiagram.astro';
+import GenealogyTree from '../components/GenealogyTree.astro';
+import SpeedBars from '../components/SpeedBars.astro';
 
 if (import.meta.env.PROD) {
   return Astro.redirect('/');
@@ -51,6 +54,15 @@ if (import.meta.env.PROD) {
 
   <h2>GilMachine A→B</h2>
   <GilMachine states={['A', 'B']} />
+
+  <h2>GiftDiagram</h2>
+  <GiftDiagram />
+
+  <h2>GenealogyTree — top half</h2>
+  <GenealogyTree />
+
+  <h2>SpeedBars — awaiting-data state</h2>
+  <SpeedBars />
 
   <style>
     h1 {

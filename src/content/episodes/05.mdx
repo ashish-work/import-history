@@ -32,11 +32,11 @@ Python 2's original sin: `str` is bytes. Unicode lives in a separate type, and i
 
 Python 3.0 was a considered answer to every one of those pressures: the str/bytes split, `print()` as a function, true division, iterators and views everywhere, classic classes gone. Each change was right. Together, all at once, they broke the world.
 
-Then came the long repair, and it took twelve years. The moratorium (PEP 3003, 2009–11) froze the language so PyPy, Jython, and IronPython could catch up — a road not taken more often. 3.1 fixed io speed. PEP 404 (2011) declared, in writing, that there would be no Python 2.8: no escape hatch. 3.3 restored the `u''` prefix (PEP 414, pushed by Armin Ronacher) as an explicit peace offering, alongside PEP 393's flexible strings. 3.4 bundled pip (PEP 453) — packaging became core's problem. And 3.5 finally delivered the carrots: async/await, the `@` operator, typing.
+Then came the long repair, and it took twelve years. The moratorium (PEP 3003, 2009–11) froze the language so PyPy, Jython, and IronPython could catch up — a road not taken more often. 3.1 fixed io speed. PEP 404 (2011) declared, in writing, that there would be no Python 2.8 — in the PEP's own words, "It is an ex-release." 3.3 restored the `u''` prefix (PEP 414, authored by Armin Ronacher and Nick Coghlan) as an explicit peace offering, alongside PEP 393's flexible strings. 3.4 shipped pip with every install via ensurepip (PEP 453) — bundled, deliberately, rather than swallowed into the stdlib. And 3.5 finally delivered the carrots: async/await, the `@` operator, typing.
 
 The tooling war told its own story: 2to3's one-way translation failed; six and single-source straddling won; a site called python3wos — the "wall of superpowers" — tracked which libraries had crossed.
 
-The end came slowly, then all at once: 2.7's end-of-life was extended to 2020 (announced at PyCon 2014); the final release, 2.7.18, shipped in April 2020; pip dropped 2.7 in January 2021; macOS stopped shipping it in 12.3, in 2022.
+The end came slowly, then all at once: 2.7's end-of-life was pushed five years to 2020 (announced around PyCon 2014, written into PEP 373); the final release, 2.7.18, shipped on April 20, 2020; pip 21.0 dropped 2.7 in January 2021; macOS stopped shipping it in 12.3, March 2022.
 
 ## The Fight
 
@@ -44,15 +44,35 @@ For years the schism held itself in place: users waited for libraries, libraries
 
 <ArchiveCard subject="SOURCE-NEEDED — chicken-and-egg deadlock thread" />
 
-The loudest late battle came in 2016: Zed Shaw's "The Case Against Python 3," and Eevee's point-by-point rebuttal.
+The loudest late battle came in November 2016: Zed Shaw's "The Case Against Python 3 (For Now)," and Eevee's point-by-point rebuttal the very next day.
 
-<ArchiveCard subject="SOURCE-NEEDED — Zed Shaw, The Case Against Python 3 (2016)" />
-<ArchiveCard subject="SOURCE-NEEDED — Eevee's rebuttal" />
+<ArchiveCard
+  from="Zed Shaw"
+  date="November 22, 2016"
+  subject="The Case Against Python 3 (For Now)"
+  href="https://learnpythonthehardway.org/book/nopython3.html"
+/>
+<ArchiveCard
+  from="Eevee"
+  date="November 23, 2016"
+  subject="A Rebuttal For Python 3"
+  href="https://eev.ee/blog/2016/11/23/a-rebuttal-for-python-3/"
+/>
 
-And then the migration war stories, told from the summit once it was climbed: Instagram's PyCon 2017 keynote, and Dropbox's multi-year, mypy-assisted port.
+And then the migration war stories, told from the summit once it was climbed: Lisa Guo and Hui Ding's Instagram keynote at PyCon 2017, and Dropbox's incremental port of a million-plus lines.
 
-<ArchiveCard subject="SOURCE-NEEDED — Instagram migration keynote, PyCon 2017" />
-<ArchiveCard subject="SOURCE-NEEDED — Dropbox migration writeup" />
+<ArchiveCard
+  from="Lisa Guo & Hui Ding"
+  date="PyCon 2017"
+  subject="Python @ Instagram — keynote"
+  href="https://www.youtube.com/watch?v=66XoCk79kjM"
+/>
+<ArchiveCard
+  from="Dropbox"
+  date="February 6, 2019"
+  subject="Incrementally migrating over one million lines of code from Python 2 to Python 3"
+  href="https://dropbox.tech/application/incrementally-migrating-over-one-million-lines-of-code-from-python-2-to-python-3"
+/>
 
 ## Why Your Code Looks Like This
 
@@ -60,12 +80,17 @@ Why are `b''` and `.encode()`/`.decode()` everywhere? Because the str/bytes spli
 
 But the deepest mark is cultural: deprecation in Python is now glacial, `from __future__` is a way of life, and the community carries a permanent trauma — never again a big-bang break. It's why Guido frames it as "there will never be a Python 4." Other languages carry the same scars from the same era: PHP 6, Perl 6 — the one that had to become a different language named Raku.
 
-The <Verify>2.x-versus-3.x adoption-gap data</Verify> deserves its own chart — when a citable source is in hand.
+How long did the schism actually last? As late as 2019 — eleven years after 3.0 — [JetBrains' developer survey](https://www.jetbrains.com/lp/python-developers-survey-2019/) still found 10% of Python developers actively using Python 2.
 
 ## Sources
 
-{/* TODO: human links — resolve each to a primary source. */}
-- PEP 3000 / 404 / 414 / 3003 — SOURCE-NEEDED
-- Guido's PyCon 2014 EOL announcement coverage — SOURCE-NEEDED
-- Instagram and Dropbox migration posts — SOURCE-NEEDED
-- Nick Coghlan's "Python 3 Q&A" — SOURCE-NEEDED
+- [Python 3.0 release page (December 3, 2008)](https://www.python.org/download/releases/3.0/)
+- [PEP 3003 — Python Language Moratorium](https://peps.python.org/pep-3003/)
+- [PEP 404 — Python 2.8 Un-release Schedule](https://peps.python.org/pep-0404/)
+- [PEP 414 — Explicit Unicode Literal for Python 3.3](https://peps.python.org/pep-0414/)
+- [PEP 393 — Flexible String Representation](https://peps.python.org/pep-0393/)
+- [PEP 453 — Explicit bootstrapping of pip](https://peps.python.org/pep-0453/)
+- [PEP 373 — Python 2.7 Release Schedule (EOL extension)](https://peps.python.org/pep-0373/)
+- [Python 2.7.18 — the last release of Python 2](https://www.python.org/downloads/release/python-2718/)
+- [Nick Coghlan, "Python 3 Q&A"](https://python-notes.curiousefficiency.org/en/latest/python3/questions_and_answers.html)
+- [JetBrains Python Developers Survey 2019](https://www.jetbrains.com/lp/python-developers-survey-2019/)

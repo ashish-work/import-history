@@ -44,9 +44,24 @@ And async needed a standard. The gevent-versus-Twisted-versus-Tornado fragmentat
 
 The canon of the color war, in order: Glyph's "Unyielding" (2014) making the pro-explicit case; Nystrom's "What Color Is Your Function?" (2015) naming the cost; Ronacher's asyncio-skeptic posts (2016) itemizing the design debt.
 
-<ArchiveCard subject="SOURCE-NEEDED — Glyph, Unyielding (2014)" />
-<ArchiveCard subject="SOURCE-NEEDED — Nystrom, What Color Is Your Function? (2015)" />
-<ArchiveCard subject="SOURCE-NEEDED — Ronacher's asyncio critiques (2016)" />
+<ArchiveCard
+  from="Glyph Lefkowitz"
+  date="February 24, 2014"
+  subject="Unyielding"
+  href="https://glyph.twistedmatrix.com/2014/02/unyielding.html"
+/>
+<ArchiveCard
+  from="Bob Nystrom"
+  date="February 1, 2015"
+  subject="What Color is Your Function?"
+  href="https://journal.stuffwithstuff.com/2015/02/01/what-color-is-your-function/"
+/>
+<ArchiveCard
+  from="Armin Ronacher"
+  date="October 30, 2016"
+  subject="I don't understand Python's Asyncio"
+  href="https://lucumr.pocoo.org/2016/10/30/i-dont-understand-asyncio/"
+/>
 
 The typing backlash ran in parallel: "this isn't Python anymore" versus the people maintaining a million lines. And one fight refused to end: the PEP 563 versus PEP 649 annotations saga starts here and doesn't resolve until 3.14 — thread the needle to episode 8.
 
@@ -56,8 +71,13 @@ Why are there two concurrency models in the stdlib? Because episode 3's war ende
 
 ## Sources
 
-{/* TODO: human links — resolve each to a primary source. */}
-- PEP 484 and the mypy origin story — SOURCE-NEEDED
-- PEP 492 — SOURCE-NEEDED
-- Glyph / Nystrom / Ronacher / Smith essays — SOURCE-NEEDED
-- Dropbox mypy-at-4M-lines post — SOURCE-NEEDED
+- [PEP 484 — Type Hints](https://peps.python.org/pep-0484/)
+- [PEP 3107 — Function Annotations](https://peps.python.org/pep-3107/)
+- [PEP 544 — Protocols: Structural subtyping](https://peps.python.org/pep-0544/)
+- [PEP 380 — Syntax for Delegating to a Subgenerator](https://peps.python.org/pep-0380/)
+- [PEP 492 — Coroutines with async and await syntax](https://peps.python.org/pep-0492/)
+- [Jukka Lehtosalo, "Our journey to type checking 4 million lines of Python" (Dropbox, 2019) — the mypy origin story](https://dropbox.tech/application/our-journey-to-type-checking-4-million-lines-of-python)
+- [Nathaniel J. Smith, "Notes on structured concurrency, or: Go statement considered harmful" (April 2018)](https://vorpus.org/blog/notes-on-structured-concurrency-or-go-statement-considered-harmful/)
+- [Andrew Godwin, "ASGI 3.0" — on ASGI's origins](https://www.aeracode.org/2019/03/20/asgi-30/)
+- [trio release history (January 2017)](https://pypi.org/project/trio/#history)
+- [What's New in Python 3.11 — TaskGroups and ExceptionGroups](https://docs.python.org/3/whatsnew/3.11.html)

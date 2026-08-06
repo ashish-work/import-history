@@ -34,20 +34,34 @@ The teaching mission never left, either. In 1999 it became explicit, in a DARPA 
 
 In February 1991, Guido posted Python 0.9.0 to alt.sources. The name came from Monty Python, not the snake.
 
-In <Verify>1992</Verify>, threads arrived — and with them the Global Interpreter Lock, because Python's reference counting wasn't thread-safe. Understand the moment before judging it: every machine had one core, and clock speeds were doubling every eighteen months. One big lock was simple, correct, and cost nothing you could measure. The GIL was the right call.
+In 1992, threads arrived — and with them the Global Interpreter Lock, because Python's reference counting wasn't thread-safe. Understand the moment before judging it: every machine had one core, and clock speeds were doubling every eighteen months. One big lock was simple, correct, and cost nothing you could measure. The GIL was the right call.
 
-Python 1.0 shipped in January 1994. Functional programming arrived by patch, not by design: `lambda`, `map`, `filter`, and `reduce` were contributed — in the phrasing of Guido's own History of Python blog — by a Lisp hacker who missed them. Guido's decade of ambivalence about those features starts here; it pays off later, in the comprehension chapters of this story.
+Python 1.0 shipped in January 1994. Functional programming arrived by patch, not by design: `lambda`, `map`, `filter`, and `reduce` were contributed, as Guido later put it, "courtesy of (I believe) a Lisp hacker who missed them and submitted working patches." Guido's decade of ambivalence about those features starts here; it pays off later, in the comprehension chapters of this story.
 
-Through the 1.5 era the language grew packages and refined its classes, comp.lang.python built a culture, and a philosophy took shape that would get a name: batteries included. In 1999, Tim Peters posted what would become the Zen of Python — canonized as PEP 20 five years later.
+Through the 1.5 era the language grew packages and refined its classes, comp.lang.python built a culture, and a philosophy took shape that would get a name: batteries included. On June 4, 1999, Tim Peters posted "The Python Way" to the list — the aphorisms that would become the Zen of Python, canonized as PEP 20 five years later.
 
 ## The Fight
 
-The GIL's first challenger arrived before most people knew the lock existed. In 1999, Greg Stein produced a free-threading patch: the GIL removed from Python 1.5, replaced with fine-grained locks. It worked. It also made single-threaded programs roughly <Verify>50% slower</Verify>.
+The GIL's first challenger arrived before most people knew the lock existed. In 1996, Greg Stein produced a set of free-threading patches against Python 1.4: the GIL removed, replaced with fine-grained locks. They worked. The cost, in Guido's later recollection: the patches "slowed down single-threaded execution nearly two-fold." And when David Beazley exhumed the patch set in 2011 and actually measured it, he found it four to seven times slower.
 
 Guido's response set the bar that would hold for two decades: no GIL removal that regresses single-threaded performance. Simple to state, brutal to satisfy.
 
-<ArchiveCard subject="SOURCE-NEEDED — Greg Stein free-threading patch announcement, 1999" />
-<ArchiveCard subject="SOURCE-NEEDED — Guido's response setting the single-threaded bar" />
+<ArchiveCard
+  from="Greg Stein"
+  date="October 13, 1996"
+  subject="Free-threading patches for Python 1.4 (README)"
+  href="https://www.python.org/ftp/python/contrib-09-Dec-1999/System/threading.README"
+>
+"These patches enable Python to be 'free threaded' or, in other words, fully reentrant across multiple threads."
+</ArchiveCard>
+<ArchiveCard
+  from="Guido van Rossum"
+  date="2007"
+  subject="On the Stein free-threading patches (Artima blog)"
+  href="https://www.artima.com/weblogs/viewpost.jsp?thread=214235"
+>
+"...it slowed down single-threaded execution nearly two-fold."
+</ArchiveCard>
 
 This is the first of four GIL-removal attempts this site tracks: Stein, then the Gilectomy, then nogil, then the free-threaded builds. Keep count as you go.
 
@@ -57,8 +71,11 @@ Why is indentation syntax? Because ABC did it, and ABC was right about readabili
 
 ## Sources
 
-{/* TODO: human links — resolve each to a primary source. */}
-- Guido's "History of Python" blog series (esp. the functional-features and ABC posts) — SOURCE-NEEDED
-- Greg Stein free-threading thread, python-dev 1999 — SOURCE-NEEDED
-- "Computer Programming for Everybody" proposal text — SOURCE-NEEDED
-- Zen of Python original c.l.py post — SOURCE-NEEDED
+- [Guido van Rossum, "A Brief Timeline of Python"](https://python-history.blogspot.com/2009/01/brief-timeline-of-python.html)
+- [Guido van Rossum, "The fate of reduce() in Python 3000" (Artima, 2005) — the "Lisp hacker" line](https://www.artima.com/weblogs/viewpost.jsp?thread=98196)
+- [Greg Stein's free-threading README, python.org FTP (1996)](https://www.python.org/ftp/python/contrib-09-Dec-1999/System/threading.README)
+- [Guido van Rossum on GIL removal (Artima, 2007)](https://www.artima.com/weblogs/viewpost.jsp?thread=214235)
+- [David Beazley, "An Inside Look at the GIL Removal Patch of Lore" (2011)](http://dabeaz.blogspot.com/2011/08/inside-look-at-gil-removal-patch-of.html)
+- ["Computer Programming for Everybody" — revised proposal to DARPA, August 1999](https://www.python.org/doc/essays/cp4e/)
+- [Tim Peters, "The Python Way" (comp.lang.python, June 4, 1999)](https://mail.python.org/pipermail/python-list/1999-June/001951.html)
+- [PEP 20 — The Zen of Python](https://peps.python.org/pep-0020/)

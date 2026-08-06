@@ -34,9 +34,9 @@ Two vectors converged on the core at once: AI workloads that want threads — da
 
 A war on two fronts.
 
-**Front one: make it faster.** Mark Shannon's plan — 5x in four releases — was proposed in October 2020, and Microsoft funded the Faster CPython team in 2021: Guido, Shannon, Brandt Bucher, and colleagues. The results shipped on cadence: 3.11's specializing adaptive interpreter (PEP 659, roughly 25% average) with zero-cost exceptions; 3.12's comprehension inlining (PEP 709) and per-interpreter GIL (PEP 684 — Eric Snow's decade-long subinterpreter arc, finally paying off); 3.13's experimental copy-and-patch JIT (PEP 744); 3.14's tail-call interpreter and stdlib subinterpreters (PEP 734). A sober note belongs here: the <Verify>May 2025 Microsoft layoffs gutted much of the Faster CPython team</Verify> — the speed work continues, but the funding question has reopened.
+**Front one: make it faster.** "I have a plan to speed up CPython by a factor of five over the next few years. But it needs funding." That was Mark Shannon on python-dev, October 20, 2020 — and Microsoft provided it, funding the Faster CPython team from 2021: Guido, Shannon, Brandt Bucher, and colleagues. The results shipped on cadence: 3.11's specializing adaptive interpreter (PEP 659 — officially "an average of 25% faster than 3.10") with zero-cost exceptions; 3.12's comprehension inlining (PEP 709) and per-interpreter GIL (PEP 684 — Eric Snow's decade-long subinterpreter arc, finally paying off); 3.13's experimental, off-by-default JIT (PEP 744); 3.14's tail-call interpreter and stdlib subinterpreters (PEP 734, as `concurrent.interpreters`). A sober note belongs here: in May 2025, [Microsoft canceled its support for the project and most of the team was laid off](https://discuss.python.org/t/community-stewardship-of-faster-cpython/92153) days before PyCon — the speed work continues, but the funding question has reopened.
 
-**Front two: remove the lock.** Recite the lineage: Stein, 1999. The Gilectomy, 2016–17 — Larry Hastings' attempt, dead on the same single-threaded cliff. Then Sam Gross, October 2021: nogil. Biased reference counting, immortal objects, mimalloc, deferred refcounting — the first attempt in twenty-two years that didn't tank single-threaded speed. The community deliberated in the open on discuss.python.org; the Steering Council conditionally accepted PEP 703 in July 2023 with a phased, reversible plan; 3.13 shipped the experimental free-threaded build; and PEP 779 made it officially supported in 3.14 (2025). Meta funded the engineer-years, and the motivation is written right on the tin: PyTorch data loading.
+**Front two: remove the lock.** Recite the lineage: Stein, 1996. The Gilectomy, 2016–17 — Larry Hastings' attempt, dead on the same single-threaded cliff. Then Sam Gross, October 7, 2021: nogil. Biased reference counting, immortal objects, mimalloc, deferred refcounting — the first attempt in a quarter century that didn't tank single-threaded speed. The community deliberated in the open on discuss.python.org; Meta put money on the table mid-debate, pledging three engineer-years conditional on acceptance; the Steering Council announced its intent to accept PEP 703 in July 2023 and formalized the acceptance that October, with a phased, reversible plan. 3.13 shipped the experimental free-threaded build, and PEP 779 made free-threading officially supported in 3.14 (October 2025).
 
 Now say the full-circle beat out loud. The GIL pushed compute into C (episode 1). The C ecosystem won science (episode 4). Science became AI (this episode). And AI's owners paid to remove the GIL.
 
@@ -44,8 +44,26 @@ Now say the full-circle beat out loud. The GIL pushed compute into C (episode 1)
 
 ## The Fight
 
-<ArchiveCard subject="SOURCE-NEEDED — PEP 703 megathread, discuss.python.org" />
-<ArchiveCard subject="SOURCE-NEEDED — SC conditional acceptance post for PEP 703" />
+<ArchiveCard
+  from="Sam Gross"
+  date="October 7, 2021"
+  subject="Python multithreading without the GIL — python-dev"
+  href="https://mail.python.org/archives/list/python-dev@python.org/thread/ABR2L6BENNA6UPSPKV474HCS4LWT26GY/"
+/>
+<ArchiveCard
+  from="Thomas Wouters (for the Steering Council)"
+  date="July 28, 2023"
+  subject="A Steering Council notice about PEP 703"
+  href="https://discuss.python.org/t/a-steering-council-notice-about-pep-703-making-the-global-interpreter-lock-optional-in-cpython/30474"
+>
+"We intend to accept PEP 703."
+</ArchiveCard>
+<ArchiveCard
+  from="The Steering Council"
+  date="October 24, 2023"
+  subject="PEP 703 acceptance, with rollout provisos"
+  href="https://discuss.python.org/t/pep-703-making-the-global-interpreter-lock-optional-in-cpython-acceptance/37075"
+/>
 
 The community's deepest fear surfaced by name: will there be two Pythons again? The abi and wheel debates — the cp313t builds — were argued explicitly in the shadow of episode 5.
 
@@ -61,14 +79,25 @@ Why does `python3.13t` exist? Why do some wheels ship two builds? Why do your Nu
 
 <GilMachine states={['B', 'C']} />
 
-<SpeedBars />
-<p><Verify>current pyperformance geomean numbers, 3.10 → 3.14</Verify></p>
+<SpeedBars>
+  <span slot="citation">
+    No official cumulative 3.10→3.14 series exists. Citable per-release claims:
+    3.11 averages 25% faster than 3.10 (python.org What's New); 3.12 and 3.13
+    publish no overall figure; 3.14's tail-call interpreter adds a 3–5%
+    geometric mean on pyperformance against its own baseline.
+  </span>
+</SpeedBars>
 
 ## Sources
 
-{/* TODO: human links — resolve each to a primary source. */}
-- Shannon plan repo — SOURCE-NEEDED
-- PEP 659 / 684 / 703 / 744 / 779 — SOURCE-NEEDED
-- SC acceptance post for PEP 703 — SOURCE-NEEDED
-- Sam Gross's original nogil announcement — SOURCE-NEEDED
-- Beazley-to-Gross lineage links — SOURCE-NEEDED
+- [Mark Shannon's plan.md — 5x in four stages](https://github.com/markshannon/faster-cpython/blob/master/plan.md)
+- [Shannon's "Speeding up CPython" post, python-dev (October 20, 2020)](https://mail.python.org/archives/list/python-dev@python.org/thread/RDXLCH22T2EZDRCBM6ZYYIUTBWQVVVWH/)
+- [PEP 659 — Specializing Adaptive Interpreter](https://peps.python.org/pep-0659/) · [PEP 709](https://peps.python.org/pep-0709/) · [PEP 684](https://peps.python.org/pep-0684/) · [PEP 744](https://peps.python.org/pep-0744/) · [PEP 734](https://peps.python.org/pep-0734/)
+- [PEP 703 — Making the GIL Optional in CPython](https://peps.python.org/pep-0703/) · [PEP 779 — supported free-threading](https://peps.python.org/pep-0779/)
+- [Sam Gross's nogil announcement (October 7, 2021)](https://mail.python.org/archives/list/python-dev@python.org/thread/ABR2L6BENNA6UPSPKV474HCS4LWT26GY/)
+- [SC intent-to-accept (July 2023)](https://discuss.python.org/t/a-steering-council-notice-about-pep-703-making-the-global-interpreter-lock-optional-in-cpython/30474) · [formal acceptance (October 2023)](https://discuss.python.org/t/pep-703-making-the-global-interpreter-lock-optional-in-cpython-acceptance/37075)
+- [Meta's engineer-years pledge (July 2023)](https://discuss.python.org/t/a-fast-free-threading-python/27903/99)
+- [Community stewardship of Faster CPython — the May 2025 layoffs](https://discuss.python.org/t/community-stewardship-of-faster-cpython/92153) · [LWN coverage](https://lwn.net/Articles/1029307/)
+- [Larry Hastings, "Removing Python's GIL: The Gilectomy" (PyCon 2016)](https://us.pycon.org/2016/schedule/presentation/2101/)
+- [What's New in Python 3.11](https://docs.python.org/3/whatsnew/3.11.html) · [3.14](https://docs.python.org/3.14/whatsnew/3.14.html)
+- [PEP 750 — Template Strings](https://peps.python.org/pep-0750/) · [PEP 730 — iOS](https://peps.python.org/pep-0730/) · [PEP 738 — Android](https://peps.python.org/pep-0738/)

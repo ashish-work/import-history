@@ -33,7 +33,7 @@ What scientists needed was specific: interactive exploration, fast arrays, plott
 
 The scientific stack assembled itself one defection at a time.
 
-**Arrays.** Jim Hugunin's Numeric (1995) split when the Hubble institute built numarray (2001) — until Travis Oliphant unified the two into NumPy in 2005–06. Mark this: a community schism, healed. Remember it during episode 5.
+**Arrays.** Jim Hugunin's Numeric (1995) split when the Space Telescope Science Institute built numarray in the early 2000s — until Travis Oliphant began the unification in early 2005, culminating in NumPy 1.0 in late 2006. Mark this: a community schism, healed. Remember it during episode 5.
 
 **Plotting.** matplotlib (2003), built by John Hunter — a MATLAB refugee doing epilepsy research. He died in 2012; NumFOCUS named its award for him.
 
@@ -41,7 +41,7 @@ The scientific stack assembled itself one defection at a time.
 
 **Tables.** pandas, open-sourced 2009–10; McKinney's "Python for Data Analysis" (2012) converted an industry.
 
-**Machine learning.** scikit-learn — a Google Summer of Code project in 2007, released by INRIA in 2010 — whose fit/predict API design later frameworks would imitate.
+**Machine learning.** scikit-learn — begun as David Cournapeau's Google Summer of Code project in 2007, first public release by the INRIA team on February 1, 2010 — whose fit/predict API design later frameworks would imitate.
 
 **Packaging the pain away.** Compiled extensions were hell to install, so Anaconda and conda arrived in 2012 (Continuum — Oliphant and Peter Wang), wheels standardized binaries the same year (PEP 427), and Cython (2007, out of Pyrex from 2002) became the on-ramp for C-glue.
 
@@ -49,9 +49,16 @@ The scientific stack assembled itself one defection at a time.
 
 The Numeric-versus-numarray split threads, and the unification that followed, are the counter-example this documentary keeps in its pocket: schism done right.
 
-<ArchiveCard subject="SOURCE-NEEDED — Numeric vs numarray unification thread" />
+<ArchiveCard
+  from="Travis Oliphant"
+  date="December 2006"
+  subject="Guide to NumPy, ch. 1 — Origins of NumPy"
+  href="https://web.mit.edu/dvp/Public/numpybook.pdf"
+>
+"In early 2005, I decided to begin an effort to help bring the diverging community together under a common framework."
+</ArchiveCard>
 
-The louder fight was R versus Python, argued across the data-science internet as Kaggle competitions tilted toward Python over <Verify>2010–2015</Verify>.
+The louder fight was R versus Python, argued across the data-science internet as Kaggle competitions tilted toward Python — by [2015–16, Python had pulled ahead](https://r4stats.com/2017/04/04/kaggle/) among competitors.
 
 ## Why Your Code Looks Like This
 
@@ -65,8 +72,12 @@ That's why `import numpy as np` is the real Python logo. That's why your "Python
 
 ## Sources
 
-{/* TODO: human links — resolve each to a primary source. */}
-- Oliphant's NumPy unification writings — SOURCE-NEEDED
-- Pérez's IPython origin post — SOURCE-NEEDED
-- McKinney's pandas history talks — SOURCE-NEEDED
-- PEP 465 — SOURCE-NEEDED
+- [Travis Oliphant, "Guide to NumPy" — Origins of NumPy chapter (2006)](https://web.mit.edu/dvp/Public/numpybook.pdf)
+- [Fernando Pérez, "The IPython notebook: a historical retrospective" (2012, archived)](https://web.archive.org/web/2014/http://blog.fperez.org/2012/01/ipython-notebook-historical.html)
+- [pandas — about and project history](https://pandas.pydata.org/about/)
+- [scikit-learn — history and authors](https://scikit-learn.org/stable/about.html)
+- [matplotlib — project history (John Hunter's 2008 introduction)](https://matplotlib.org/stable/project/history.html)
+- [NumFOCUS — the John Hunter fellowship](https://numfocus.org/programs/john-hunter-technology-fellowship)
+- [PEP 427 — The Wheel Binary Package Format 1.0](https://peps.python.org/pep-0427/)
+- [PEP 465 — A dedicated infix operator for matrix multiplication](https://peps.python.org/pep-0465/)
+- [Bob Muenchen, "Python and R Vie for Top Spot in Kaggle Competitions" (2017)](https://r4stats.com/2017/04/04/kaggle/)

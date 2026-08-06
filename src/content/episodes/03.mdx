@@ -38,20 +38,35 @@ The community didn't route around the GIL once. It did it three ways simultaneou
 
 **Sidestep it — processes.** `multiprocessing` landed in 2.6 and 3.0 in 2008 (PEP 371, adopted from the pyprocessing package). Be clear about what it is: not a fix, a workaround — with serialization taxes on every object crossing the boundary. It's also why a decade of tutorials cargo-cult `if __name__ == "__main__":` without explaining it.
 
-**Hide it — implicit green threads.** greenlet, extracted from Stackless ideas by Armin Rigo, begat eventlet — born at Linden Lab to run Second Life — which begat gevent, Denis Bilenko's 2009 monkey-patch-the-world answer: blocking code that doesn't block. Tornado, open-sourced by FriendFeed in 2009, staked out the pragmatic middle path.
+**Hide it — implicit green threads.** greenlet, extracted from Stackless ideas by Armin Rigo, begat eventlet — begun by Bob Ippolito in 2006, then developed and open-sourced at Linden Lab to run Second Life — which begat gevent, Denis Bilenko's 2009 monkey-patch-the-world answer: blocking code that doesn't block. Tornado, open-sourced by FriendFeed in September 2009, staked out the pragmatic middle path.
 
-**Fix the GIL itself — and fail, mostly.** Antoine Pitrou's new GIL (3.2, 2011) moved to time-slice scheduling and fixed multicore thrashing — then Beazley's 2010 follow-up exposed the convoy effect with I/O threads. Google's Unladen Swallow (2009) promised a 5x LLVM JIT with a merge plan in PEP 3146, and fizzled by 2011, leaving a published retrospective. Psyco was retired in favor of PyPy, which got genuinely fast around 2010–11 and became the perennial "just use PyPy" answer that production mostly doesn't take.
+**Fix the GIL itself — and fail, mostly.** Antoine Pitrou's new GIL (3.2, released February 2011) moved to time-slice scheduling and fixed multicore thrashing — then Beazley's 2010 follow-up exposed the convoy effect with I/O threads. Google's Unladen Swallow (2009) promised a 5x LLVM JIT with a merge plan in PEP 3146, and fizzled — the PEP's withdrawal notice reads "With Unladen Swallow going the way of the Norwegian Blue, this PEP has been deemed to have been withdrawn," and the retrospective followed in March 2011. Psyco was retired in favor of PyPy, which got genuinely fast around 2010–11 and became the perennial "just use PyPy" answer that production mostly doesn't take.
 
 ## The Fight
 
 The fight had a professor. Beazley's "Inside the Python GIL" (ChiPy, 2009) and "Understanding the Python GIL" (PyCon 2010) did what nobody had bothered to do in nineteen years: instrument the lock and show the room what it actually did.
 
-<ArchiveCard subject="SOURCE-NEEDED — Beazley, Inside the Python GIL (ChiPy 2009)" />
-<ArchiveCard subject="SOURCE-NEEDED — Beazley, Understanding the Python GIL (PyCon 2010)" />
+<ArchiveCard
+  from="David Beazley"
+  date="June 11, 2009"
+  subject="Inside the Python GIL — ChiPy meeting, Chicago"
+  href="https://www.dabeaz.com/GIL/"
+/>
+<ArchiveCard
+  from="David Beazley"
+  date="February 20, 2010"
+  subject="Understanding the Python GIL — PyCon 2010, Atlanta"
+  href="https://www.dabeaz.com/GIL/"
+/>
 
-On python-dev, the new-GIL threads and the convoy-effect bug report (<Verify>bug number</Verify>) carried the technical argument. In the community at large, the gevent-versus-Twisted flame threads carried the ideological one: implicit versus explicit, round one. Round two is episode 6.
+On python-dev, the new-GIL threads and the convoy-effect bug report — [bpo-7946](https://bugs.python.org/issue7946), filed by Beazley in February 2010 and never resolved — carried the technical argument. In the community at large, the gevent-versus-Twisted flame threads carried the ideological one: implicit versus explicit, round one. Round two is episode 6.
 
-<ArchiveCard subject="SOURCE-NEEDED — python-dev thread: the new GIL / convoy effect" />
+<ArchiveCard
+  from="David Beazley (dabeaz)"
+  date="February 16, 2010"
+  subject="bpo-7946: Convoy effect with I/O bound threads and New GIL"
+  href="https://bugs.python.org/issue7946"
+/>
 <ArchiveCard subject="SOURCE-NEEDED — gevent vs Twisted flame thread" />
 
 {/* Field report: the author's first-person production gevent/greenlet locking story belongs here — human prose only. */}
@@ -67,9 +82,13 @@ Why does `threading` exist but nobody trusts it for CPU work? This episode. Why 
 
 ## Sources
 
-{/* TODO: human links — resolve each to a primary source. */}
-- Sutter's essay — SOURCE-NEEDED
-- Beazley's two GIL talks — SOURCE-NEEDED
-- PEP 371 — SOURCE-NEEDED
-- Unladen Swallow retrospective — SOURCE-NEEDED
-- gevent announcement post — SOURCE-NEEDED
+- [Herb Sutter, "The Free Lunch Is Over" (Dr. Dobb's Journal, March 2005)](http://www.gotw.ca/publications/concurrency-ddj.htm)
+- [David Beazley's GIL talks — slides and recordings](https://www.dabeaz.com/GIL/)
+- [bpo-7946 — Convoy effect with I/O bound threads and New GIL](https://bugs.python.org/issue7946)
+- [What's New in Python 3.2 — the new GIL](https://docs.python.org/3/whatsnew/3.2.html)
+- [PEP 371 — Addition of the multiprocessing package](https://peps.python.org/pep-0371/)
+- [PEP 3146 — Merging Unladen Swallow into CPython (withdrawn)](https://peps.python.org/pep-3146/)
+- [Reid Kleckner, "Unladen Swallow Retrospective" (March 2011)](https://qinsb.blogspot.com/2011/03/unladen-swallow-retrospective.html)
+- [gevent release history (first public releases, July 2009)](https://pypi.org/project/gevent/#history)
+- [Bret Taylor, "The technology behind Tornado" (September 10, 2009)](https://backchannel.org/blog/tornado)
+- [Eventlet project history](https://eventlet.readthedocs.io/en/latest/history.html)

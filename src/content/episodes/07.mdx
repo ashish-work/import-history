@@ -2,7 +2,7 @@
 number: 7
 title: "The Abdication"
 era: "2018–2019"
-intro: "A two-character operator burns out the BDFL. A four-paragraph resignation email, a constitutional convention held in public, and the council that inherits the language."
+intro: "A two-character operator burns out the BDFL. A resignation email, a constitutional convention held in public, and the council that inherits the language."
 image: ./07.png
 status: full
 accent: phosphor
@@ -15,7 +15,7 @@ import Verify from '../../components/Verify.astro';
 
 <ColdOpen
   stamp="July 12, 2018, python-committers."
-  hook='Subject line: "Transfer of power." The message is four paragraphs long.'
+  hook='Subject line: "Transfer of power." The BDFL is giving himself a permanent vacation.'
 />
 
 ## The World
@@ -30,15 +30,27 @@ The proximate cause was two characters wide. PEP 572, assignment expressions —
 
 This episode *is* the fight, so the emails should do the talking: the walrus threads, the resignation, and the governance debates that followed. Minimal narration from here.
 
-On July 12, 2018, the "Transfer of power" message landed on python-committers. In it, Guido said — <Verify>wording to be checked against the pipermail original</Verify> — that he never wanted to fight that hard for a PEP again, and that he was giving himself a permanent vacation from being BDFL. Crucially, he named no successor and defined no process. His parting question to the committers: so what are you all going to do?
+On July 12, 2018, the "Transfer of power" message landed on python-committers. "Now that PEP 572 is done, I don't ever want to have to fight so hard for a PEP and find that so many people despise my decisions," Guido wrote. "I'm basically giving myself a permanent vacation from being BDFL, and you all will be on your own." Crucially — "I am not going to appoint a successor" — and he defined no process either. His parting question: "So what are you all going to do? Create a democracy? Anarchy? A dictatorship? A federation?"
 
-<ArchiveCard subject='SOURCE-NEEDED — "Transfer of power", python-committers, July 12, 2018' />
+<ArchiveCard
+  from="Guido van Rossum"
+  date="Thu Jul 12 10:57:35 EDT 2018"
+  subject="[python-committers] Transfer of power"
+  href="https://mail.python.org/pipermail/python-committers/2018-July/005664.html"
+>
+"I would like to remove myself entirely from the decision process. ... But I'm basically giving myself a permanent vacation from being BDFL, and you all will be on your own. ... I'll still be here, but I'm trying to let you all figure something out for yourselves. I'm tired, and need a very long break."
+</ArchiveCard>
 
 ## The Response
 
-What they did was run a constitutional convention in public. The governance bake-off — PEPs 8010 through 8016 — proposed dictators, councils, and community models, each argued in full. A Condorcet vote in December 2018 chose PEP 8016 (Smith and Stufft). PEP 13 became the constitution. And in February 2019, the first Steering Council was elected: Warsaw, Cannon, Willing, Coghlan — and van Rossum himself, now one vote among five.
+What they did was run a constitutional convention in public. The governance bake-off — PEPs 8010 through 8016 — proposed dictators, councils, and community models, each argued in full. A Condorcet vote (December 1–16, 2018; 62 of 94 core developers voting) chose PEP 8016, authored by Nathaniel Smith and Donald Stufft. PEP 13 became the constitution. And in the election that closed February 4, 2019, the first Steering Council was chosen: Warsaw, Cannon, Willing, Coghlan — and van Rossum himself, now one vote among five.
 
-<ArchiveCard subject="SOURCE-NEEDED — governance PEPs 8010–8016 summaries / vote results" />
+<ArchiveCard
+  from="Ernest W. Durbin III"
+  date="December 17, 2018"
+  subject="Python governance vote (December 2018): results"
+  href="https://discuss.python.org/t/python-governance-vote-december-2018-results/546"
+/>
 
 The consequences arrived quickly: PEP 602 set an annual release cadence in 2019. And it would be this Steering Council — not a BDFL — that later makes the single biggest technical call in the language's history. That's episode 8.
 
@@ -48,8 +60,11 @@ Why does `:=` exist, and why does its scoping feel odd? Because it was the last 
 
 ## Sources
 
-{/* TODO: human links — resolve each to a primary source. */}
-- The "Transfer of power" pipermail message (link the original) — SOURCE-NEEDED
-- PEP 572 — SOURCE-NEEDED
-- PEPs 8000–8016, PEP 13 — SOURCE-NEEDED
-- First Steering Council election results post — SOURCE-NEEDED
+- ["Transfer of power" — the original pipermail message (July 12, 2018)](https://mail.python.org/pipermail/python-committers/2018-July/005664.html)
+- [PEP 572 — Assignment Expressions](https://peps.python.org/pep-0572/)
+- [PEP 8016 — The Steering Council Model](https://peps.python.org/pep-8016/)
+- [PEP 8001 — the voting process](https://peps.python.org/pep-8001/)
+- [Governance vote results (December 17, 2018)](https://discuss.python.org/t/python-governance-vote-december-2018-results/546)
+- [PEP 8100 — the January 2019 Steering Council election](https://peps.python.org/pep-8100/)
+- [PEP 13 — Python Language Governance](https://peps.python.org/pep-0013/)
+- [PEP 602 — Annual Release Cycle for Python](https://peps.python.org/pep-0602/)

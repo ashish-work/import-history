@@ -3,15 +3,61 @@ number: 1
 title: "A Language for Christmas"
 era: "Origins · 1989–1999"
 image: ./01.png
-status: stub
+status: full
 accent: phosphor
 ---
 import ColdOpen from '../../components/ColdOpen.astro';
-import EraBanner from '../../components/EraBanner.astro';
+import ArchiveCard from '../../components/ArchiveCard.astro';
+import Verify from '../../components/Verify.astro';
+
+{/* Draft prose by Claude, built strictly from content-outline.md. Review before publishing. */}
 
 <ColdOpen
   stamp="Amsterdam, December 1989."
-  hook="A bored researcher, a Christmas holiday, and a teaching language nobody wanted — plus the most consequential lock in programming history, added without a fight."
+  hook="CWI is closed for the holidays. A bored researcher needs a hobby project. What he starts over Christmas will carry the most consequential lock in programming history — added without a fight."
 />
 
-<EraBanner />
+## The World
+
+Before Python there was ABC — a teaching language built at CWI in Amsterdam, designed to be readable above all else. Indentation instead of braces. High-level types instead of pointer arithmetic. ABC is where Python's DNA comes from, and ABC failed: a closed ecosystem with no extensibility, no way to open a file, no escape hatches to the world outside the language. A beautiful classroom with the doors locked.
+
+Around it, the pressures of late-eighties computing: CWI's Amoeba distributed-OS project needed a scripting language, and the daily reality of Unix work meant choosing between the shell — quick but shapeless — and C — powerful but slow to write. Into that gap, Perl was already moving, on its way to becoming the sysadmin's lingua franca. The Perl rivalry would define Python's first decade.
+
+## The Pressure
+
+The niche was glue. Unix automation, text munging, sysadmin work — jobs that wanted something easier than C and more structured than shell or Perl. Nobody was asking for elegance; they were asking to get things done without segfaults.
+
+The teaching mission never left, either. In 1999 it became explicit, in a DARPA proposal titled "Computer Programming for Everybody" — the idea that programming literacy belonged to everyone, with Python as the vehicle.
+
+## The Response
+
+In February 1991, Guido posted Python 0.9.0 to alt.sources. The name came from Monty Python, not the snake.
+
+In <Verify>1992</Verify>, threads arrived — and with them the Global Interpreter Lock, because Python's reference counting wasn't thread-safe. Understand the moment before judging it: every machine had one core, and clock speeds were doubling every eighteen months. One big lock was simple, correct, and cost nothing you could measure. The GIL was the right call.
+
+Python 1.0 shipped in January 1994. Functional programming arrived by patch, not by design: `lambda`, `map`, `filter`, and `reduce` were contributed — in the phrasing of Guido's own History of Python blog — by a Lisp hacker who missed them. Guido's decade of ambivalence about those features starts here; it pays off later, in the comprehension chapters of this story.
+
+Through the 1.5 era the language grew packages and refined its classes, comp.lang.python built a culture, and a philosophy took shape that would get a name: batteries included. In 1999, Tim Peters posted what would become the Zen of Python — canonized as PEP 20 five years later.
+
+## The Fight
+
+The GIL's first challenger arrived before most people knew the lock existed. In 1999, Greg Stein produced a free-threading patch: the GIL removed from Python 1.5, replaced with fine-grained locks. It worked. It also made single-threaded programs roughly <Verify>50% slower</Verify>.
+
+Guido's response set the bar that would hold for two decades: no GIL removal that regresses single-threaded performance. Simple to state, brutal to satisfy.
+
+<ArchiveCard subject="SOURCE-NEEDED — Greg Stein free-threading patch announcement, 1999" />
+<ArchiveCard subject="SOURCE-NEEDED — Guido's response setting the single-threaded bar" />
+
+This is the first of four GIL-removal attempts this site tracks: Stein, then the Gilectomy, then nogil, then the free-threaded builds. Keep count as you go.
+
+## Why Your Code Looks Like This
+
+Why is indentation syntax? Because ABC did it, and ABC was right about readability even while being wrong about everything else. Why is `self` explicit? Same inheritance. Why does `lambda` feel bolted on? Because it literally was — it arrived in a patch, from someone else, into a language whose designer never fully wanted it.
+
+## Sources
+
+{/* TODO: human links — resolve each to a primary source. */}
+- Guido's "History of Python" blog series (esp. the functional-features and ABC posts) — SOURCE-NEEDED
+- Greg Stein free-threading thread, python-dev 1999 — SOURCE-NEEDED
+- "Computer Programming for Everybody" proposal text — SOURCE-NEEDED
+- Zen of Python original c.l.py post — SOURCE-NEEDED

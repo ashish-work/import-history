@@ -12,6 +12,8 @@ import Verify from '../../components/Verify.astro';
 import SpeedBars from '../../components/SpeedBars.astro';
 import GilMachine from '../../components/GilMachine.astro';
 
+{/* Draft prose by Claude, built strictly from content-outline.md. Review before publishing. */}
+
 <ColdOpen
   stamp="November 2020."
   hook="Guido van Rossum, retired for a year, tweets that retirement was boring — he's joined Microsoft, and he has a plan about performance."
@@ -19,37 +21,42 @@ import GilMachine from '../../components/GilMachine.astro';
 
 ## The World
 
-{/* TODO: human prose — the coronation: TensorFlow (Nov 2015) picks a Python frontend because episode 4 already happened. PyTorch (2017) from Lua Torch — Lua had the better runtime story and lost on ecosystem. Keras, Hugging Face transformers (2018–19), then ChatGPT (Nov 2022): the AI boom runs on Python glue over CUDA. */}
-{/* TODO: human prose — the bill: cloud economics make "Python is slow" a line item. Instagram/Dropbox-scale fleets price interpreter overhead in dollars. */}
+First, the coronation. In November 2015, TensorFlow picked a Python frontend — because episode 4 had already happened: the numpy idioms, the notebooks, the researchers were all in place. PyTorch followed in 2017, ported from Lua Torch, and carried an explicit lesson: Lua had the better runtime story and lost on ecosystem. Keras, then Hugging Face's transformers (2018–19), then ChatGPT in November 2022. The AI boom runs on Python glue over CUDA.
+
+Then, the bill. Cloud economics turned "Python is slow" from a forum argument into a line item. At Instagram and Dropbox scale, interpreter overhead is priced in dollars.
 
 ## The Pressure
 
-{/* TODO: human prose — two converging vectors: AI workloads that want threads hitting the GIL; and general fleet cost demanding a faster interpreter. For the first time, the money and the motivation both point at the core. */}
+Two vectors converged on the core at once: AI workloads that want threads — data loaders, serving — hitting the GIL; and general fleet costs demanding a faster interpreter. For the first time in this whole story, the money and the motivation both pointed at the same place.
 
 ## The Response
 
-{/* TODO: human prose — two-front war. */}
-{/* TODO: human prose — make it faster, the Shannon Plan: 5x-in-4-releases proposal (Oct 2020); Microsoft funds Faster CPython (2021). 3.11 specializing adaptive interpreter (PEP 659, ~25% avg); 3.12 comprehension inlining (PEP 709), per-interpreter GIL (PEP 684 — Eric Snow's decade-long arc); 3.13 experimental copy-and-patch JIT (PEP 744); 3.14 tail-call interpreter, subinterpreters in stdlib (PEP 734). */}
-<p><Verify>May 2025 Microsoft layoffs — who/how many of the Faster CPython team</Verify></p>
-{/* TODO: human prose — remove the lock, nogil: Stein '99 → Gilectomy 2016–17 (Larry Hastings, dies on single-thread perf) → Sam Gross, nogil (Oct 2021): biased reference counting, immortal objects, mimalloc, deferred RC. SC conditionally accepts PEP 703 (July 2023) → 3.13 experimental free-threaded build → PEP 779 officially supported in 3.14 (2025). Meta funds engineer-years; the motivation is PyTorch data loading. */}
-{/* TODO: human prose — THE FULL-CIRCLE BEAT, stated explicitly: the GIL pushed compute into C (ep 1) → the C ecosystem won science (ep 4) → science became AI (this ep) → AI's owners paid to remove the GIL. */}
-{/* TODO: human prose — epilogue: the Rust wave below the line (ruff, uv, polars, pydantic-core, PyO3) as "the new C"; iOS/Android tiers (3.13); t-strings (PEP 750, 3.14). The lagging-indicator thesis restated over the credits. */}
+A war on two fronts.
+
+**Front one: make it faster.** Mark Shannon's plan — 5x in four releases — was proposed in October 2020, and Microsoft funded the Faster CPython team in 2021: Guido, Shannon, Brandt Bucher, and colleagues. The results shipped on cadence: 3.11's specializing adaptive interpreter (PEP 659, roughly 25% average) with zero-cost exceptions; 3.12's comprehension inlining (PEP 709) and per-interpreter GIL (PEP 684 — Eric Snow's decade-long subinterpreter arc, finally paying off); 3.13's experimental copy-and-patch JIT (PEP 744); 3.14's tail-call interpreter and stdlib subinterpreters (PEP 734). A sober note belongs here: the <Verify>May 2025 Microsoft layoffs gutted much of the Faster CPython team</Verify> — the speed work continues, but the funding question has reopened.
+
+**Front two: remove the lock.** Recite the lineage: Stein, 1999. The Gilectomy, 2016–17 — Larry Hastings' attempt, dead on the same single-threaded cliff. Then Sam Gross, October 2021: nogil. Biased reference counting, immortal objects, mimalloc, deferred refcounting — the first attempt in twenty-two years that didn't tank single-threaded speed. The community deliberated in the open on discuss.python.org; the Steering Council conditionally accepted PEP 703 in July 2023 with a phased, reversible plan; 3.13 shipped the experimental free-threaded build; and PEP 779 made it officially supported in 3.14 (2025). Meta funded the engineer-years, and the motivation is written right on the tin: PyTorch data loading.
+
+Now say the full-circle beat out loud. The GIL pushed compute into C (episode 1). The C ecosystem won science (episode 4). Science became AI (this episode). And AI's owners paid to remove the GIL.
+
+**Epilogue.** The pressure never stops; it just changes language. The Rust wave is moving in below the line — ruff, uv, polars, pydantic-core, PyO3 — "the new C." CPython landed official iOS and Android tiers in 3.13, and t-strings (PEP 750) in 3.14. Language features are lagging indicators of industry pressure. Roll credits.
 
 ## The Fight
 
-{/* TODO: human prose — PEP 703 discuss.python.org megathreads + the SC acceptance post. */}
 <ArchiveCard subject="SOURCE-NEEDED — PEP 703 megathread, discuss.python.org" />
 <ArchiveCard subject="SOURCE-NEEDED — SC conditional acceptance post for PEP 703" />
 
-{/* TODO: human prose — "Will there be two Pythons again?" — the community explicitly arguing about not repeating episode 5; the abi/wheel debate (cp313t builds). */}
+The community's deepest fear surfaced by name: will there be two Pythons again? The abi and wheel debates — the cp313t builds — were argued explicitly in the shadow of episode 5.
+
 <ArchiveCard subject="SOURCE-NEEDED — two-Pythons-again / cp313t wheel debate" />
 
-{/* TODO: human prose — Faster-CPython vs nogil tension threads (specialization vs free-threading interactions). */}
+And the two fronts tugged against each other: specialization and free-threading interact, and the tension threads between Faster CPython and nogil are their own genre.
+
 <ArchiveCard subject="SOURCE-NEEDED — specialization vs free-threading tension thread" />
 
 ## Why Your Code Looks Like This
 
-{/* TODO: human prose — why python3.13t exists; why some wheels ship two builds; why your NumPy/PyTorch upgrade notes mention free-threading; why "is the GIL gone?" is now a version question, not a yes/no. */}
+Why does `python3.13t` exist? Why do some wheels ship two builds? Why do your NumPy and PyTorch upgrade notes suddenly mention free-threading? Because "is the GIL gone?" is now a version question, not a yes/no. After thirty-four years, that is what victory looks like.
 
 <GilMachine states={['B', 'C']} />
 

@@ -3,15 +3,60 @@ number: 6
 title: "Scripts Become Systems"
 era: "2012–2018"
 image: ./06.png
-status: stub
+status: full
 accent: py-blue
 ---
 import ColdOpen from '../../components/ColdOpen.astro';
-import EraBanner from '../../components/EraBanner.astro';
+import ArchiveCard from '../../components/ArchiveCard.astro';
+import Verify from '../../components/Verify.astro';
+
+{/* Draft prose by Claude, built strictly from content-outline.md. Review before publishing. */}
 
 <ColdOpen
   stamp="PyCon 2013, a hallway conversation."
-  hook="Dropbox and Instagram hit millions of lines of untyped Python, Node steals the async crown, and the language grows types and await in self-defense."
+  hook="A Cambridge PhD student demos a new language with Python-ish syntax and static types. Guido's counter-offer: make it check Python instead. It becomes mypy."
 />
 
-<EraBanner />
+## The World
+
+Docker in 2013. Kubernetes in 2014. Microservices, SaaS everywhere — and Go 1.0 (2012) starting to eat Python's ops niche while Node's async model owned the "modern server" narrative.
+
+Meanwhile Python codebases crossed a threshold nobody had planned for: a million lines. Dropbox — where Guido himself landed in 2013. Instagram's Django monolith, serving a billion users. OpenStack. Scripts had become systems, and the language was still dressed for scripting.
+
+## The Pressure
+
+Untyped Python at scale means refactoring fear, onboarding cost, and the daily question "what does this function take?" Types arrived as pressure from codebase size, not fashion.
+
+And async needed a standard. The gevent-versus-Twisted-versus-Tornado fragmentation — episode 3's unresolved war — was still splitting the ecosystem three ways.
+
+## The Response
+
+**The typing arc.** Annotations had existed since 3.0 with no semantics at all (PEP 3107) — syntax waiting for a purpose. mypy, Jukka Lehtosalo's redirected thesis project, gave them one. PEP 484 made gradual typing official in 3.5 (2015). Then variable annotations (3.6), dataclasses (3.7, attrs-inspired), Protocols (PEP 544, 3.8). Facebook, Google, and Microsoft each built their own checker — pyre, pytype, pyright — and typeshed became a commons. Types became an industry.
+
+**The async arc.** `yield from` (PEP 380, 3.3), then Guido's own tulip experiment, then asyncio in 3.4, then the real keywords — async/await, PEP 492, in 3.5, driven by Yury Selivanov. Async generators in 3.6, contextvars in 3.7, uvloop underneath. Then the framework story caught fire: ASGI (Andrew Godwin), Starlette and uvicorn in 2018, and FastAPI the same year — async finally got its Rails moment.
+
+**Quality of life.** 3.6 brought f-strings (PEP 498) and ordered dicts — an implementation detail promoted to a guarantee in 3.7. Call it the "Python got nice" release.
+
+**The counterculture.** curio (Beazley, again) and trio (Nathaniel Smith, 2017) argued the stdlib had standardized the wrong design, and the 2018 essay "Go statement considered harmful" made the structured-concurrency case — vindicated years later when TaskGroups and ExceptionGroups landed in 3.11.
+
+## The Fight
+
+The canon of the color war, in order: Glyph's "Unyielding" (2014) making the pro-explicit case; Nystrom's "What Color Is Your Function?" (2015) naming the cost; Ronacher's asyncio-skeptic posts (2016) itemizing the design debt.
+
+<ArchiveCard subject="SOURCE-NEEDED — Glyph, Unyielding (2014)" />
+<ArchiveCard subject="SOURCE-NEEDED — Nystrom, What Color Is Your Function? (2015)" />
+<ArchiveCard subject="SOURCE-NEEDED — Ronacher's asyncio critiques (2016)" />
+
+The typing backlash ran in parallel: "this isn't Python anymore" versus the people maintaining a million lines. And one fight refused to end: the PEP 563 versus PEP 649 annotations saga starts here and doesn't resolve until 3.14 — thread the needle to episode 8.
+
+## Why Your Code Looks Like This
+
+Why are there two concurrency models in the stdlib? Because episode 3's war ended in a treaty, not a victory. Why does async color your whole call stack? Nystrom named it; the design chose it. Why are type hints optional-but-everywhere? Gradual typing was the only politically possible typing. And why do FastAPI signatures look like that? Because annotations finally earned their keep.
+
+## Sources
+
+{/* TODO: human links — resolve each to a primary source. */}
+- PEP 484 and the mypy origin story — SOURCE-NEEDED
+- PEP 492 — SOURCE-NEEDED
+- Glyph / Nystrom / Ronacher / Smith essays — SOURCE-NEEDED
+- Dropbox mypy-at-4M-lines post — SOURCE-NEEDED

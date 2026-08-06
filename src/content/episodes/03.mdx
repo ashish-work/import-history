@@ -12,6 +12,8 @@ import Verify from '../../components/Verify.astro';
 import GilMachine from '../../components/GilMachine.astro';
 import GenealogyTree from '../../components/GenealogyTree.astro';
 
+{/* Draft prose by Claude, built strictly from content-outline.md. Review before publishing. */}
+
 <ColdOpen
   stamp="PyCon Atlanta, February 2010."
   hook="David Beazley walks on stage with graphs of a two-thread program running slower on two cores than one. The room goes quiet."
@@ -19,36 +21,39 @@ import GenealogyTree from '../../components/GenealogyTree.astro';
 
 ## The World
 
-{/* TODO: human prose — Herb Sutter, "The Free Lunch Is Over" (DDJ, March 2005): clock speeds stall, the future is cores. */}
-{/* TODO: human prose — Intel Core Duo ships (Jan 2006); by 2008 every laptop is multicore. Hardware breaks Python's 1991 assumption overnight. */}
-{/* TODO: human prose — Node.js at JSConf EU (Nov 2009): single-threaded async as a brand. Sudden outside pressure on Python's web story. */}
+In March 2005, Herb Sutter published "The Free Lunch Is Over" in Dr. Dobb's Journal. The argument: clock speeds have stalled; from now on, the future is cores. For fifteen years, slow software had simply waited for faster chips. That subsidy just ended.
+
+The hardware followed on schedule. Intel's Core Duo shipped in January 2006, and by 2008 every laptop was multicore. Python's founding assumption from 1991 — one core per machine, so one big lock costs nothing — broke overnight. Nobody changed a line of Python; the machines changed underneath it.
+
+Then, in November 2009 at JSConf EU, Node.js arrived, selling single-threaded async as a brand. Suddenly Python's web story had outside competition wearing its own old clothes.
 
 ## The Pressure
 
-{/* TODO: human prose — The GIL goes from footnote to villain: multicore machines, CPU-bound Python can't scale up. */}
-{/* TODO: human prose — Web tier needs C10K-class concurrency; Twisted exists but callback style splits the community. */}
+The GIL went from footnote to villain. On a multicore machine, CPU-bound Python simply cannot scale up — the second core sits dark while the lock passes hand to hand. Meanwhile the web tier needed C10K-class concurrency; Twisted existed, but its callback style split the community into those who would contort their code and those who refused.
 
 ## The Response
 
-{/* TODO: human prose — three simultaneous escape routes. */}
-{/* TODO: human prose — Sidestep it, processes: multiprocessing lands in 2.6/3.0 (2008, PEP 371, from pyprocessing). Not a fix, a workaround with serialization taxes — explains a decade of if __name__ == "__main__" cargo cult. */}
-{/* TODO: human prose — Hide it, implicit green threads: greenlet (extracted from Stackless ideas, Armin Rigo) → eventlet (Linden Lab / Second Life) → gevent (Denis Bilenko, 2009): monkey-patch the world. Tornado (FriendFeed → open-sourced 2009) as the pragmatic middle path. */}
-{/* TODO: human prose — Fix the GIL itself, and fail (mostly): Antoine Pitrou's new GIL (3.2, 2011); Beazley's 2010 follow-up exposes the convoy effect. Unladen Swallow (2009, PEP 3146) fizzles by 2011. Psyco retired for PyPy, the perennial "just use PyPy" answer production mostly doesn't take. */}
+The community didn't route around the GIL once. It did it three ways simultaneously.
+
+**Sidestep it — processes.** `multiprocessing` landed in 2.6 and 3.0 in 2008 (PEP 371, adopted from the pyprocessing package). Be clear about what it is: not a fix, a workaround — with serialization taxes on every object crossing the boundary. It's also why a decade of tutorials cargo-cult `if __name__ == "__main__":` without explaining it.
+
+**Hide it — implicit green threads.** greenlet, extracted from Stackless ideas by Armin Rigo, begat eventlet — born at Linden Lab to run Second Life — which begat gevent, Denis Bilenko's 2009 monkey-patch-the-world answer: blocking code that doesn't block. Tornado, open-sourced by FriendFeed in 2009, staked out the pragmatic middle path.
+
+**Fix the GIL itself — and fail, mostly.** Antoine Pitrou's new GIL (3.2, 2011) moved to time-slice scheduling and fixed multicore thrashing — then Beazley's 2010 follow-up exposed the convoy effect with I/O threads. Google's Unladen Swallow (2009) promised a 5x LLVM JIT with a merge plan in PEP 3146, and fizzled by 2011, leaving a published retrospective. Psyco was retired in favor of PyPy, which got genuinely fast around 2010–11 and became the perennial "just use PyPy" answer that production mostly doesn't take.
 
 ## The Fight
 
-{/* TODO: human prose — Beazley's "Inside the Python GIL" (ChiPy 2009) + "Understanding the Python GIL" (PyCon 2010). */}
+The fight had a professor. Beazley's "Inside the Python GIL" (ChiPy, 2009) and "Understanding the Python GIL" (PyCon 2010) did what nobody had bothered to do in nineteen years: instrument the lock and show the room what it actually did.
+
 <ArchiveCard subject="SOURCE-NEEDED — Beazley, Inside the Python GIL (ChiPy 2009)" />
 <ArchiveCard subject="SOURCE-NEEDED — Beazley, Understanding the Python GIL (PyCon 2010)" />
 
-{/* TODO: human prose — python-dev threads on the new GIL and the convoy-effect bug report. */}
-<ArchiveCard subject="SOURCE-NEEDED — python-dev thread: the new GIL / convoy effect" />
-<p><Verify>convoy-effect bug number</Verify></p>
+On python-dev, the new-GIL threads and the convoy-effect bug report (<Verify>bug number</Verify>) carried the technical argument. In the community at large, the gevent-versus-Twisted flame threads carried the ideological one: implicit versus explicit, round one. Round two is episode 6.
 
-{/* TODO: human prose — gevent-vs-Twisted flame threads: implicit vs explicit, round one. */}
+<ArchiveCard subject="SOURCE-NEEDED — python-dev thread: the new GIL / convoy effect" />
 <ArchiveCard subject="SOURCE-NEEDED — gevent vs Twisted flame thread" />
 
-{/* TODO: human prose — first-person sidebar, "field report": the author's production gevent/greenlet locking bug at an ML inference platform doing 1M+ requests/day. The site's "I was there" moment. */}
+{/* Field report: the author's first-person production gevent/greenlet locking story belongs here — human prose only. */}
 <ArchiveCard subject="SOURCE-NEEDED — field report: gevent locking bug, 1M+ req/day" />
 
 <GilMachine states={['A', 'B']} />
@@ -57,7 +62,7 @@ import GenealogyTree from '../../components/GenealogyTree.astro';
 
 ## Why Your Code Looks Like This
 
-{/* TODO: human prose — why threading exists but nobody trusts it for CPU work; why multiprocessing exists at all; why every 2010s Python shop had a gevent scar or a Twisted scar; why "the GIL" is the first thing interviewers ask about. */}
+Why does `threading` exist but nobody trusts it for CPU work? This episode. Why does `multiprocessing` exist at all? This episode. Why did every Python shop of the 2010s carry either a gevent scar or a Twisted scar? This episode. And why is the GIL the first thing interviewers ask about? Because for one decade, it was the most consequential thing in the language nobody had chosen.
 
 ## Sources
 

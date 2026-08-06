@@ -11,6 +11,8 @@ import ArchiveCard from '../../components/ArchiveCard.astro';
 import Verify from '../../components/Verify.astro';
 import GiftDiagram from '../../components/GiftDiagram.astro';
 
+{/* Draft prose by Claude, built strictly from content-outline.md. Review before publishing. */}
+
 <ColdOpen
   stamp="A quant desk at AQR Capital, 2008."
   hook="Wes McKinney, frustrated with the tools, starts a side project to wrangle financial tables in Python. He calls it pandas."
@@ -18,35 +20,45 @@ import GiftDiagram from '../../components/GiftDiagram.astro';
 
 ## The World
 
-{/* TODO: human prose — MATLAB licenses cost thousands per seat; academics priced out. Fortran/C fast but hostile. The "two-language problem". */}
-{/* TODO: human prose — astronomy (Hubble/STScI) and physics labs need array computing on a budget. */}
+MATLAB licenses cost thousands of dollars per seat, and academics were priced out. Fortran and C were fast and hostile. Between them sat the "two-language problem": prototype in something humane, then rewrite everything in something fast — twice the work, twice the bugs.
+
+The demand was real and institutional: astronomy at the Hubble's science institute, physics labs everywhere — all needing array computing on a budget.
 
 ## The Pressure
 
-{/* TODO: human prose — scientists need interactive exploration, fast arrays, plotting, and a language they can teach grad students in a week. Nobody built Python for this — the pressure found the language. */}
+What scientists needed was specific: interactive exploration, fast arrays, plotting, and a language you could teach a grad student in a week. Here's the strange part — nobody built Python for this. The pressure found the language.
 
 ## The Response
 
-{/* TODO: human prose — the stack assembles, one defection at a time. */}
-{/* TODO: human prose — arrays: Numeric (Jim Hugunin, 1995) → numarray split (STScI, 2001) → Travis Oliphant unifies into NumPy (2005–06) — a schism healed, contrast with ep 5. */}
-{/* TODO: human prose — plotting: matplotlib (John Hunter, 2003), built by a MATLAB refugee doing epilepsy research; memorial note (d. 2012, NumFOCUS award). */}
-{/* TODO: human prose — interactivity: IPython (Fernando Pérez, 2001) → Notebook (2011) → Jupyter (2014–15). */}
-{/* TODO: human prose — tables: pandas open-sourced 2009–10; "Python for Data Analysis" (2012) converts an industry. */}
-{/* TODO: human prose — ML: scikit-learn (GSoC 2007, INRIA release 2010) — the fit/predict API later frameworks imitate. */}
-{/* TODO: human prose — packaging the pain away: Anaconda/conda (2012), wheels (PEP 427, 2012), Cython (2007, from Pyrex 2002). */}
+The scientific stack assembled itself one defection at a time.
+
+**Arrays.** Jim Hugunin's Numeric (1995) split when the Hubble institute built numarray (2001) — until Travis Oliphant unified the two into NumPy in 2005–06. Mark this: a community schism, healed. Remember it during episode 5.
+
+**Plotting.** matplotlib (2003), built by John Hunter — a MATLAB refugee doing epilepsy research. He died in 2012; NumFOCUS named its award for him.
+
+**Interactivity.** IPython began in 2001 as Fernando Pérez's physics-PhD procrastination project. It became the Notebook in 2011, then Jupyter in 2014–15 — the lab notebook that became the industry's default interface.
+
+**Tables.** pandas, open-sourced 2009–10; McKinney's "Python for Data Analysis" (2012) converted an industry.
+
+**Machine learning.** scikit-learn — a Google Summer of Code project in 2007, released by INRIA in 2010 — whose fit/predict API design later frameworks would imitate.
+
+**Packaging the pain away.** Compiled extensions were hell to install, so Anaconda and conda arrived in 2012 (Continuum — Oliphant and Peter Wang), wheels standardized binaries the same year (PEP 427), and Cython (2007, out of Pyrex from 2002) became the on-ramp for C-glue.
 
 ## The Fight
 
-{/* TODO: human prose — Numeric vs numarray split threads and the unification story — schism done right. */}
+The Numeric-versus-numarray split threads, and the unification that followed, are the counter-example this documentary keeps in its pocket: schism done right.
+
 <ArchiveCard subject="SOURCE-NEEDED — Numeric vs numarray unification thread" />
 
-{/* TODO: human prose — R vs Python discourse as Kaggle tilts Python. */}
-<p><Verify>Kaggle tilt date range (2010–2015)</Verify></p>
+The louder fight was R versus Python, argued across the data-science internet as Kaggle competitions tilted toward Python over <Verify>2010–2015</Verify>.
 
 ## Why Your Code Looks Like This
 
-{/* TODO: human prose — THE THESIS CHAPTER. The mechanism, stated plainly: C extensions release the GIL. NumPy dives below the lock; other threads run; the meter climbs. The GIL forced heavy compute below the line → a world-class C/Fortran ecosystem accreted → science chose Python because of that ecosystem. */}
-{/* TODO: human prose — why import numpy as np is the real Python logo; why your "Python" hot loop is actually BLAS; why @ exists (PEP 465 — the ecosystem now steers the core; forward-ref to ep 8). */}
+This is the thesis chapter. Here is the mechanism, stated plainly: **C extensions release the GIL.** When NumPy dives below the lock into compiled code, other threads run. The meter climbs.
+
+Follow the chain. The GIL forced heavy compute below the line. A world-class C and Fortran ecosystem accreted down there. Science chose Python *because of that ecosystem*. The flaw caused the win.
+
+That's why `import numpy as np` is the real Python logo. That's why your "Python" hot loop is actually BLAS. That's why `@` exists as an operator — matrix multiplication, PEP 465: numpy literally got syntax added to the language. The ecosystem now steers the core. Hold that thought until episode 8.
 
 <GiftDiagram />
 

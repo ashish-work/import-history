@@ -3,15 +3,52 @@ number: 7
 title: "The Abdication"
 era: "2018–2019"
 image: ./07.png
-status: stub
+status: full
 accent: phosphor
 ---
 import ColdOpen from '../../components/ColdOpen.astro';
-import EraBanner from '../../components/EraBanner.astro';
+import ArchiveCard from '../../components/ArchiveCard.astro';
+import Verify from '../../components/Verify.astro';
+
+{/* Draft prose by Claude, built strictly from content-outline.md. Review before publishing. */}
 
 <ColdOpen
   stamp="July 12, 2018, python-committers."
-  hook="A two-character operator triggers a succession crisis. The purest primary-source episode: the resignation email, timestamped."
+  hook='Subject line: "Transfer of power." The message is four paragraphs long.'
 />
 
-<EraBanner />
+## The World
+
+By 2018, Python was critical infrastructure — a top-three language on every index — and python-dev's volume and temperature scaled with the userbase. "Benevolent Dictator For Life" had been a joke title from 1995. Now it carried a real industry, and the weight was no longer funny.
+
+## The Pressure
+
+The proximate cause was two characters wide. PEP 572, assignment expressions — the walrus operator, `:=` — generated hundreds of messages across python-ideas and python-dev, comprehension-scoping edge cases, and "kill it with fire" energy. Guido accepted the PEP himself. Then he counted what it had cost.
+
+## The Fight
+
+This episode *is* the fight, so the emails should do the talking: the walrus threads, the resignation, and the governance debates that followed. Minimal narration from here.
+
+On July 12, 2018, the "Transfer of power" message landed on python-committers. In it, Guido said — <Verify>wording to be checked against the pipermail original</Verify> — that he never wanted to fight that hard for a PEP again, and that he was giving himself a permanent vacation from being BDFL. Crucially, he named no successor and defined no process. His parting question to the committers: so what are you all going to do?
+
+<ArchiveCard subject='SOURCE-NEEDED — "Transfer of power", python-committers, July 12, 2018' />
+
+## The Response
+
+What they did was run a constitutional convention in public. The governance bake-off — PEPs 8010 through 8016 — proposed dictators, councils, and community models, each argued in full. A Condorcet vote in December 2018 chose PEP 8016 (Smith and Stufft). PEP 13 became the constitution. And in February 2019, the first Steering Council was elected: Warsaw, Cannon, Willing, Coghlan — and van Rossum himself, now one vote among five.
+
+<ArchiveCard subject="SOURCE-NEEDED — governance PEPs 8010–8016 summaries / vote results" />
+
+The consequences arrived quickly: PEP 602 set an annual release cadence in 2019. And it would be this Steering Council — not a BDFL — that later makes the single biggest technical call in the language's history. That's episode 8.
+
+## Why Your Code Looks Like This
+
+Why does `:=` exist, and why does its scoping feel odd? Because it was the last hill the dictatorship died on. Why do PEPs now end with "the Steering Council accepted…"? February 2019. Why does Python release every October? PEP 602 — a governance reform you can read in your version numbers.
+
+## Sources
+
+{/* TODO: human links — resolve each to a primary source. */}
+- The "Transfer of power" pipermail message (link the original) — SOURCE-NEEDED
+- PEP 572 — SOURCE-NEEDED
+- PEPs 8000–8016, PEP 13 — SOURCE-NEEDED
+- First Steering Council election results post — SOURCE-NEEDED

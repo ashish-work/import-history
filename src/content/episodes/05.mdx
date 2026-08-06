@@ -3,15 +3,68 @@ number: 5
 title: "Two Pythons"
 era: "The Schism · 2008–2020"
 image: ./05.png
-status: stub
+status: full
 accent: amber
 ---
 import ColdOpen from '../../components/ColdOpen.astro';
-import EraBanner from '../../components/EraBanner.astro';
+import ArchiveCard from '../../components/ArchiveCard.astro';
+import Verify from '../../components/Verify.astro';
+
+{/* Draft prose by Claude, built strictly from content-outline.md. Review before publishing. */}
 
 <ColdOpen
   stamp="December 3, 2008."
-  hook="Guido breaks the world over strings. It takes twelve years, two economic crises, and a peace-offering u'' to put it back together."
+  hook="Python 3.0 ships. It is, by most benchmarks, slower than 2.6. Almost nobody upgrades."
 />
 
-<EraBanner />
+## The World
+
+The timing could hardly have been worse. The financial crisis meant nobody had budget to port working code. Then the mobile boom meant everyone was building and nobody was migrating.
+
+And yet the break was becoming unavoidable, because unicode was no longer optional: the web had gone global, emoji were coming, and `UnicodeDecodeError` was the landmine buried in every 2.x application, waiting for production traffic to find it.
+
+## The Pressure
+
+Python 2's original sin: `str` is bytes. Unicode lives in a separate type, and implicit coercion between them hides bugs until the worst possible moment. Around that sin, accumulated cruft — the `print` statement, integer division that truncates, classic classes.
+
+## The Response
+
+Python 3.0 was a considered answer to every one of those pressures: the str/bytes split, `print()` as a function, true division, iterators and views everywhere, classic classes gone. Each change was right. Together, all at once, they broke the world.
+
+Then came the long repair, and it took twelve years. The moratorium (PEP 3003, 2009–11) froze the language so PyPy, Jython, and IronPython could catch up — a road not taken more often. 3.1 fixed io speed. PEP 404 (2011) declared, in writing, that there would be no Python 2.8: no escape hatch. 3.3 restored the `u''` prefix (PEP 414, pushed by Armin Ronacher) as an explicit peace offering, alongside PEP 393's flexible strings. 3.4 bundled pip (PEP 453) — packaging became core's problem. And 3.5 finally delivered the carrots: async/await, the `@` operator, typing.
+
+The tooling war told its own story: 2to3's one-way translation failed; six and single-source straddling won; a site called python3wos — the "wall of superpowers" — tracked which libraries had crossed.
+
+The end came slowly, then all at once: 2.7's end-of-life was extended to 2020 (announced at PyCon 2014); the final release, 2.7.18, shipped in April 2020; pip dropped 2.7 in January 2021; macOS stopped shipping it in 12.3, in 2022.
+
+## The Fight
+
+For years the schism held itself in place: users waited for libraries, libraries waited for users. The chicken-and-egg deadlock threads repeat like a chorus.
+
+<ArchiveCard subject="SOURCE-NEEDED — chicken-and-egg deadlock thread" />
+
+The loudest late battle came in 2016: Zed Shaw's "The Case Against Python 3," and Eevee's point-by-point rebuttal.
+
+<ArchiveCard subject="SOURCE-NEEDED — Zed Shaw, The Case Against Python 3 (2016)" />
+<ArchiveCard subject="SOURCE-NEEDED — Eevee's rebuttal" />
+
+And then the migration war stories, told from the summit once it was climbed: Instagram's PyCon 2017 keynote, and Dropbox's multi-year, mypy-assisted port.
+
+<ArchiveCard subject="SOURCE-NEEDED — Instagram migration keynote, PyCon 2017" />
+<ArchiveCard subject="SOURCE-NEEDED — Dropbox migration writeup" />
+
+## Why Your Code Looks Like This
+
+Why are `b''` and `.encode()`/`.decode()` everywhere? Because the str/bytes split is the schism's monument. Why does `print` have parentheses? You know why now.
+
+But the deepest mark is cultural: deprecation in Python is now glacial, `from __future__` is a way of life, and the community carries a permanent trauma — never again a big-bang break. It's why Guido frames it as "there will never be a Python 4." Other languages carry the same scars from the same era: PHP 6, Perl 6 — the one that had to become a different language named Raku.
+
+The <Verify>2.x-versus-3.x adoption-gap data</Verify> deserves its own chart — when a citable source is in hand.
+
+## Sources
+
+{/* TODO: human links — resolve each to a primary source. */}
+- PEP 3000 / 404 / 414 / 3003 — SOURCE-NEEDED
+- Guido's PyCon 2014 EOL announcement coverage — SOURCE-NEEDED
+- Instagram and Dropbox migration posts — SOURCE-NEEDED
+- Nick Coghlan's "Python 3 Q&A" — SOURCE-NEEDED

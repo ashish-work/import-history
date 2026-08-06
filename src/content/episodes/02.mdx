@@ -3,15 +3,58 @@ number: 2
 title: "The Web Arrives"
 era: "1995–2005"
 image: ./02.png
-status: stub
+status: full
 accent: py-blue
 ---
 import ColdOpen from '../../components/ColdOpen.astro';
-import EraBanner from '../../components/EraBanner.astro';
+import ArchiveCard from '../../components/ArchiveCard.astro';
+import Verify from '../../components/Verify.astro';
+
+{/* Draft prose by Claude, built strictly from content-outline.md. Review before publishing. */}
 
 <ColdOpen
   stamp="A newsroom in Lawrence, Kansas, 2003–2005."
-  hook="The dot-com boom turns a scripting language into a server language — and quietly plants both seeds of the concurrency war."
+  hook="Two developers on newspaper deadlines keep extracting the same pieces from their code. The framework they pull out becomes Django."
 />
 
-<EraBanner />
+## The World
+
+The dot-com boom, then the bust. The early web ran on CGI scripts, and the early web belonged to Perl and PHP — while Java claimed everything that called itself a "serious" server. Python was the outsider at both parties.
+
+Guido's own employment traced the industry's turbulence: CNRI, then BeOpen — <Verify>a stint measured in months</Verify> — then Zope Corporation, then Elemental Security, and finally Google in 2005. Zope itself, open-sourced in 1998, was Python's first killer app, and its commercial success quietly funded core development through the lean years.
+
+## The Pressure
+
+Web workloads are strings, requests, templates, and databases — and every one of them pressed on the language. The demand was blunt: make Python a server citizen.
+
+Two outside events sharpened it. Ruby on Rails arrived in 2004 and lit a fire under every dynamic language's web story. And back in 1999, Dan Kegel had given a name to a harder problem — C10K: one machine, ten thousand simultaneous connections. Threads won't cut it. That name hangs over the next twenty years of this documentary.
+
+## The Response
+
+Python 2.0, October 2000: list comprehensions — a Haskell import Guido actually liked, in pointed contrast to episode 1's lambda — cycle-detecting garbage collection, the first unicode strings behind `u''`, and something less visible but more consequential: the PEP process itself. Governance shipped as a feature.
+
+Python 2.2, December 2001, was the intellectual big-bang release: new-style classes unified types and classes, descriptors arrived, iterators (PEP 234) became a protocol, and generators (PEP 255, hidden behind `from __future__`) planted the seed of everything async that follows.
+
+2.4 brought decorators in 2004, after the notorious PEP 318 syntax bake-off. 2.5 brought `with` (PEP 343) — and PEP 342, `generator.send()`, the quiet moment generators became coroutines. Hold that thought until episode 6.
+
+The web tier assembled around WSGI (PEP 333, 2003), the interface that let Django, Flask, and Pylons interoperate instead of balkanizing. Django emerged from that Lawrence, Kansas newsroom in 2005 alongside TurboGears and Pylons. Google made Python one of its three official languages; YouTube ran on it; Reddit was rewritten onto it from Lisp in 2005.
+
+And the other seed: Stackless Python, Christian Tismer's microthreads experiment from around 1999 — the road CPython didn't take, but one an MMO named EVE Online bet on in 2003. Together with Medusa and asyncore, the ancient event-loop ancestors, both lineages of the coming concurrency war were now planted, twenty years before it ends.
+
+## The Fight
+
+The PEP 318 decorator-syntax threads — the `@` versus list-syntax war — are a perfect low-stakes introduction to how python-dev argues: exhaustively, publicly, and with a decision at the end.
+
+<ArchiveCard subject="SOURCE-NEEDED — PEP 318 syntax bake-off thread, python-dev" />
+
+Meanwhile, in the design arguments over those first unicode strings, a charge was being planted. It detonates in episode 5.
+
+## Why Your Code Looks Like This
+
+Why does `@decorator` look like that? Because a mailing list fought a syntax war and that symbol won. Why does `dict.items()` behave the way it does? The iterator protocol of 2.2. Why is there a `with` statement instead of `try/finally` everywhere? PEP 343, and a language learning to manage resources on your behalf.
+
+## Sources
+
+{/* TODO: human links — resolve each to a primary source. */}
+- PEP 255, PEP 318 threads, PEP 333 — SOURCE-NEEDED
+- Guido's "Origins of Python's Functional Features" and comprehension history posts — SOURCE-NEEDED

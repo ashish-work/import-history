@@ -6,7 +6,7 @@
     "subtitle": "Origins",
     "years": "1989–1999",
     "startYear": 1989,
-    "status": "stub",
+    "status": "full",
     "accent": "phosphor",
     "teaser": "A bored researcher, a Christmas holiday, and a teaching language nobody wanted — plus the most consequential lock in programming history, added without a fight."
   },
@@ -17,7 +17,7 @@
     "subtitle": "",
     "years": "1995–2005",
     "startYear": 1995,
-    "status": "stub",
+    "status": "full",
     "accent": "py-blue",
     "teaser": "The dot-com boom turns a scripting language into a server language — and quietly plants both seeds of the concurrency war."
   },
@@ -50,7 +50,7 @@
     "subtitle": "The Schism",
     "years": "2008–2020",
     "startYear": 2008,
-    "status": "stub",
+    "status": "full",
     "accent": "amber",
     "teaser": "Guido breaks the world over strings. It takes twelve years, two economic crises, and a peace-offering u'' to put it back together."
   },
@@ -61,7 +61,7 @@
     "subtitle": "",
     "years": "2012–2018",
     "startYear": 2012,
-    "status": "stub",
+    "status": "full",
     "accent": "py-blue",
     "teaser": "Dropbox and Instagram hit millions of lines of untyped Python, Node steals the async crown, and the language grows types and await in self-defense."
   },
@@ -72,7 +72,7 @@
     "subtitle": "",
     "years": "2018–2019",
     "startYear": 2018,
-    "status": "stub",
+    "status": "full",
     "accent": "phosphor",
     "teaser": "A two-character operator triggers a succession crisis. The purest primary-source episode: the resignation email, timestamped."
   },

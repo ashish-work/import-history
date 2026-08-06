@@ -1,0 +1,63 @@
+---
+// Full-viewport cold open: stamp types on, hook fades in, pixel arrow bounces.
+interface Props {
+  stamp: string;
+  hook: string;
+}
+const { stamp, hook } = Astro.props;
+const chars = stamp.length;
+---
+<section class="cold-open">
+  <p class="co-stamp" style={`--chars: ${chars}`}>{stamp}</p>
+  <p class="co-hook">{hook}</p>
+  <span class="co-arrow" aria-hidden="true">▼</span>
+</section>
+
+<style>
+  .cold-open {
+    min-height: 90svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    position: relative;
+    padding: calc(var(--grid) * 4) 0;
+  }
+  .co-stamp {
+    font-family: var(--font-terminal);
+    font-size: 24px;
+    color: var(--amber);
+    margin: 0 0 calc(var(--grid) * 3);
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 100%;
+    width: calc(var(--chars) * 1ch);
+    animation: co-type 1.6s steps(var(--chars), end) both;
+  }
+  .co-hook {
+    font-size: 17px;
+    max-width: 68ch;
+    margin: 0;
+    animation: co-appear 0.2s steps(1, end) 1.8s both;
+  }
+  .co-arrow {
+    position: absolute;
+    bottom: calc(var(--grid) * 4);
+    left: 0;
+    color: var(--dim);
+    font-size: 24px;
+    animation: co-bounce 0.8s steps(1, end) infinite;
+  }
+  @keyframes co-type {
+    from { width: 0; }
+  }
+  @keyframes co-appear {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes co-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(var(--grid)); }
+  }
+  /* global reduced-motion collapse snaps all three to their final frames */
+</style>

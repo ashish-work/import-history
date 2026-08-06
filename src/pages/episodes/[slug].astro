@@ -2,6 +2,7 @@
 // ponytail: placeholder route until M4 replaces it with MDX content collections
 import PageShell from '../../layouts/PageShell.astro';
 import GilMachine from '../../components/GilMachine.astro';
+import EraBanner from '../../components/EraBanner.astro';
 import episodes from '../../data/episodes.json';
 
 export function getStaticPaths() {
@@ -16,7 +17,7 @@ const { episode } = Astro.props;
     <h1>{episode.title}</h1>
     <p class="ep-era">{episode.subtitle ? `${episode.subtitle} · ` : ''}{episode.years}</p>
     <p class="ep-teaser">{episode.teaser}</p>
-    <p class="ep-banner">[ IN PRODUCTION <span class="cursor"></span> ]</p>
+    <EraBanner />
     {episode.number === 3 && <GilMachine states={['A', 'B']} />}
     <p><a href="/">← Back to the timeline</a></p>
   </article>
@@ -43,15 +44,6 @@ const { episode } = Astro.props;
       margin: 0 0 calc(var(--grid) * 3);
     }
     .ep-teaser {
-      margin: 0 0 calc(var(--grid) * 4);
-    }
-    .ep-banner {
-      display: inline-block;
-      font-family: var(--font-terminal);
-      font-size: 20px;
-      color: var(--amber);
-      background: var(--surface);
-      padding: var(--grid) calc(var(--grid) * 2);
       margin: 0 0 calc(var(--grid) * 4);
     }
   </style>

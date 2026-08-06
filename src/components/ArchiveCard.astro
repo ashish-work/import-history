@@ -1,0 +1,86 @@
+---
+// Mailing-list excerpt card. Scaffolds ship with the literal SOURCE-NEEDED
+// placeholder (brief rule 2.1) — never a composed excerpt.
+interface Props {
+  from?: string;
+  date?: string;
+  subject?: string;
+  href?: string;
+}
+const { from = 'SOURCE-NEEDED', date = 'SOURCE-NEEDED', subject = 'SOURCE-NEEDED', href } = Astro.props;
+---
+<div class="archive-card pixel-border">
+  <div class="titlebar" aria-hidden="true">
+    <span class="btn"></span><span class="btn"></span><span class="btn"></span>
+  </div>
+  <span class="stamp" aria-hidden="true">ARCHIVE</span>
+  <dl class="headers">
+    <div><dt>From:</dt><dd>{from}</dd></div>
+    <div><dt>Date:</dt><dd>{date}</dd></div>
+    <div><dt>Subject:</dt><dd>{subject}</dd></div>
+  </dl>
+  <div class="body">
+    <slot>SOURCE-NEEDED</slot>
+  </div>
+  {href && <a class="source" href={href}>→ primary source</a>}
+</div>
+
+<style>
+  .archive-card {
+    position: relative;
+    background: var(--surface);
+    margin: calc(var(--grid) * 4) 0;
+    font-family: var(--font-terminal);
+    font-size: 20px;
+    line-height: 1.4;
+  }
+  .titlebar {
+    display: flex;
+    gap: var(--grid);
+    padding: var(--grid) calc(var(--grid) * 2);
+    border-bottom: 2px solid var(--bg);
+  }
+  .btn {
+    width: var(--grid);
+    height: var(--grid);
+    background: var(--dim);
+  }
+  .stamp {
+    position: absolute;
+    top: calc(var(--grid) * 3);
+    right: calc(var(--grid) * 2);
+    transform: rotate(-3deg);
+    font-family: var(--font-display);
+    font-size: 12px;
+    color: var(--amber);
+    border: 2px solid var(--amber);
+    padding: var(--grid);
+  }
+  .headers {
+    margin: 0;
+    padding: calc(var(--grid) * 2) calc(var(--grid) * 2) 0;
+    color: var(--dim);
+  }
+  .headers div {
+    display: flex;
+    gap: var(--grid);
+  }
+  .headers dt {
+    min-width: calc(var(--grid) * 10);
+  }
+  .headers dd {
+    margin: 0;
+    color: var(--ink);
+    overflow-wrap: anywhere;
+  }
+  .body {
+    padding: calc(var(--grid) * 2);
+    color: var(--phosphor);
+    white-space: pre-line;
+  }
+  .source {
+    display: inline-block;
+    margin: 0 calc(var(--grid) * 2) calc(var(--grid) * 2);
+    color: var(--py-blue);
+  }
+</style>

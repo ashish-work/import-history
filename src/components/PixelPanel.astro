@@ -1,0 +1,56 @@
+---
+interface Props {
+  variant?: 'default' | 'terminal' | 'alert';
+  title?: string;
+}
+const { variant = 'default', title } = Astro.props;
+---
+<div class={`pixel-panel pixel-border ${variant}`}>
+  {variant === 'terminal' && (
+    <div class="panel-titlebar" aria-hidden="true">
+      <span class="btn"></span><span class="btn"></span><span class="btn"></span>
+      {title && <span class="panel-title">{title}</span>}
+    </div>
+  )}
+  <div class="panel-body">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .pixel-panel {
+    background: var(--surface);
+    margin: calc(var(--grid) * 3) 0;
+  }
+  .pixel-panel.alert {
+    border-color: var(--alert);
+    box-shadow: 6px 6px 0 var(--alert);
+  }
+  .panel-titlebar {
+    display: flex;
+    align-items: center;
+    gap: var(--grid);
+    padding: var(--grid) calc(var(--grid) * 2);
+    border-bottom: 2px solid var(--bg);
+  }
+  .btn {
+    width: var(--grid);
+    height: var(--grid);
+    background: var(--dim);
+  }
+  .panel-title {
+    margin-left: var(--grid);
+    font-family: var(--font-terminal);
+    font-size: 20px;
+    color: var(--dim);
+  }
+  .panel-body {
+    padding: calc(var(--grid) * 2);
+  }
+  .terminal .panel-body {
+    font-family: var(--font-terminal);
+    font-size: 20px;
+    line-height: 1.4;
+    color: var(--phosphor);
+  }
+</style>

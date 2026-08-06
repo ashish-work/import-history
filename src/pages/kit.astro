@@ -1,0 +1,70 @@
+---
+// Dev-only component gallery (brief M3 ✅). Redirects home in production builds.
+import PageShell from '../layouts/PageShell.astro';
+import PixelPanel from '../components/PixelPanel.astro';
+import ArchiveCard from '../components/ArchiveCard.astro';
+import ColdOpen from '../components/ColdOpen.astro';
+import EraBanner from '../components/EraBanner.astro';
+import Verify from '../components/Verify.astro';
+import DualTimeline from '../components/DualTimeline.astro';
+import GilMachine from '../components/GilMachine.astro';
+
+if (import.meta.env.PROD) {
+  return Astro.redirect('/');
+}
+---
+<PageShell title="/kit · component gallery">
+  <h1>/kit</h1>
+  <p class="note">Every component variant, for visual verification. Dev only.</p>
+
+  <h2>ColdOpen</h2>
+  <ColdOpen
+    stamp="PyCon Atlanta, February 2010."
+    hook="David Beazley walks on stage with graphs of a two-thread program running slower on two cores than one. The room goes quiet."
+  />
+
+  <h2>PixelPanel — default</h2>
+  <PixelPanel>Body text inside a default panel. IBM Plex Mono, 17px.</PixelPanel>
+
+  <h2>PixelPanel — terminal</h2>
+  <PixelPanel variant="terminal" title="python-dev">Terminal-variant body. VT323, phosphor on dark.</PixelPanel>
+
+  <h2>PixelPanel — alert</h2>
+  <PixelPanel variant="alert">THE FIGHT sections use the alert variant.</PixelPanel>
+
+  <h2>ArchiveCard — scaffold state</h2>
+  <ArchiveCard />
+
+  <h2>ArchiveCard — with source link</h2>
+  <ArchiveCard from="SOURCE-NEEDED" date="SOURCE-NEEDED" subject="SOURCE-NEEDED" href="https://mail.python.org/">
+    SOURCE-NEEDED
+  </ArchiveCard>
+
+  <h2>EraBanner</h2>
+  <EraBanner />
+
+  <h2>Verify</h2>
+  <p>Threads arrived in <Verify>1992</Verify> and the meter is a metaphor.</p>
+
+  <h2>DualTimeline</h2>
+  <DualTimeline />
+
+  <h2>GilMachine A→B</h2>
+  <GilMachine states={['A', 'B']} />
+
+  <style>
+    h1 {
+      font-size: 24px;
+      color: var(--phosphor);
+      margin: calc(var(--grid) * 4) 0 calc(var(--grid) * 2);
+    }
+    h2 {
+      font-size: 12px;
+      color: var(--amber);
+      margin: calc(var(--grid) * 8) 0 calc(var(--grid) * 2);
+    }
+    .note {
+      color: var(--dim);
+    }
+  </style>
+</PageShell>

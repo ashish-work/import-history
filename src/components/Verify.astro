@@ -1,0 +1,14 @@
+<span class="verify-claim"><slot /><span class="verify-badge">[VERIFY]</span></span>
+
+<style>
+  .verify-claim {
+    border-bottom: 2px dotted var(--alert);
+  }
+  .verify-badge {
+    font-family: var(--font-display);
+    font-size: 12px;
+    color: var(--alert);
+    margin-left: var(--grid);
+    white-space: nowrap;
+  }
+</style>

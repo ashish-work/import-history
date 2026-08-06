@@ -1,0 +1,62 @@
+---
+number: 8
+title: "The Lock Comes Off"
+era: "AI Coronation & the Speed Reckoning · 2015–now"
+status: full
+accent: py-yellow
+---
+import ColdOpen from '../../components/ColdOpen.astro';
+import ArchiveCard from '../../components/ArchiveCard.astro';
+import Verify from '../../components/Verify.astro';
+
+<ColdOpen
+  stamp="November 2020."
+  hook="Guido van Rossum, retired for a year, tweets that retirement was boring — he's joined Microsoft, and he has a plan about performance."
+/>
+
+## The World
+
+{/* TODO: human prose — the coronation: TensorFlow (Nov 2015) picks a Python frontend because episode 4 already happened. PyTorch (2017) from Lua Torch — Lua had the better runtime story and lost on ecosystem. Keras, Hugging Face transformers (2018–19), then ChatGPT (Nov 2022): the AI boom runs on Python glue over CUDA. */}
+{/* TODO: human prose — the bill: cloud economics make "Python is slow" a line item. Instagram/Dropbox-scale fleets price interpreter overhead in dollars. */}
+
+## The Pressure
+
+{/* TODO: human prose — two converging vectors: AI workloads that want threads hitting the GIL; and general fleet cost demanding a faster interpreter. For the first time, the money and the motivation both point at the core. */}
+
+## The Response
+
+{/* TODO: human prose — two-front war. */}
+{/* TODO: human prose — make it faster, the Shannon Plan: 5x-in-4-releases proposal (Oct 2020); Microsoft funds Faster CPython (2021). 3.11 specializing adaptive interpreter (PEP 659, ~25% avg); 3.12 comprehension inlining (PEP 709), per-interpreter GIL (PEP 684 — Eric Snow's decade-long arc); 3.13 experimental copy-and-patch JIT (PEP 744); 3.14 tail-call interpreter, subinterpreters in stdlib (PEP 734). */}
+<p><Verify>May 2025 Microsoft layoffs — who/how many of the Faster CPython team</Verify></p>
+{/* TODO: human prose — remove the lock, nogil: Stein '99 → Gilectomy 2016–17 (Larry Hastings, dies on single-thread perf) → Sam Gross, nogil (Oct 2021): biased reference counting, immortal objects, mimalloc, deferred RC. SC conditionally accepts PEP 703 (July 2023) → 3.13 experimental free-threaded build → PEP 779 officially supported in 3.14 (2025). Meta funds engineer-years; the motivation is PyTorch data loading. */}
+{/* TODO: human prose — THE FULL-CIRCLE BEAT, stated explicitly: the GIL pushed compute into C (ep 1) → the C ecosystem won science (ep 4) → science became AI (this ep) → AI's owners paid to remove the GIL. */}
+{/* TODO: human prose — epilogue: the Rust wave below the line (ruff, uv, polars, pydantic-core, PyO3) as "the new C"; iOS/Android tiers (3.13); t-strings (PEP 750, 3.14). The lagging-indicator thesis restated over the credits. */}
+
+## The Fight
+
+{/* TODO: human prose — PEP 703 discuss.python.org megathreads + the SC acceptance post. */}
+<ArchiveCard subject="SOURCE-NEEDED — PEP 703 megathread, discuss.python.org" />
+<ArchiveCard subject="SOURCE-NEEDED — SC conditional acceptance post for PEP 703" />
+
+{/* TODO: human prose — "Will there be two Pythons again?" — the community explicitly arguing about not repeating episode 5; the abi/wheel debate (cp313t builds). */}
+<ArchiveCard subject="SOURCE-NEEDED — two-Pythons-again / cp313t wheel debate" />
+
+{/* TODO: human prose — Faster-CPython vs nogil tension threads (specialization vs free-threading interactions). */}
+<ArchiveCard subject="SOURCE-NEEDED — specialization vs free-threading tension thread" />
+
+## Why Your Code Looks Like This
+
+{/* TODO: human prose — why python3.13t exists; why some wheels ship two builds; why your NumPy/PyTorch upgrade notes mention free-threading; why "is the GIL gone?" is now a version question, not a yes/no. */}
+
+{/* M6: GilMachine states B→C mounts here — the padlock dissolves, four lanes light simultaneously, meter climbs to 100%. Same component as ep 1/3, one prop changed. */}
+{/* M5: SpeedBars mounts here — 3.10 → 3.14 relative performance. Numbers come from the human, cited. */}
+<p><Verify>current pyperformance geomean numbers, 3.10 → 3.14</Verify></p>
+
+## Sources
+
+{/* TODO: human links — resolve each to a primary source. */}
+- Shannon plan repo — SOURCE-NEEDED
+- PEP 659 / 684 / 703 / 744 / 779 — SOURCE-NEEDED
+- SC acceptance post for PEP 703 — SOURCE-NEEDED
+- Sam Gross's original nogil announcement — SOURCE-NEEDED
+- Beazley-to-Gross lineage links — SOURCE-NEEDED

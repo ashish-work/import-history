@@ -1,0 +1,65 @@
+---
+number: 3
+title: "The Free Lunch Is Over"
+era: "2005–2012"
+status: full
+accent: amber
+---
+import ColdOpen from '../../components/ColdOpen.astro';
+import ArchiveCard from '../../components/ArchiveCard.astro';
+import Verify from '../../components/Verify.astro';
+import GilMachine from '../../components/GilMachine.astro';
+
+<ColdOpen
+  stamp="PyCon Atlanta, February 2010."
+  hook="David Beazley walks on stage with graphs of a two-thread program running slower on two cores than one. The room goes quiet."
+/>
+
+## The World
+
+{/* TODO: human prose — Herb Sutter, "The Free Lunch Is Over" (DDJ, March 2005): clock speeds stall, the future is cores. */}
+{/* TODO: human prose — Intel Core Duo ships (Jan 2006); by 2008 every laptop is multicore. Hardware breaks Python's 1991 assumption overnight. */}
+{/* TODO: human prose — Node.js at JSConf EU (Nov 2009): single-threaded async as a brand. Sudden outside pressure on Python's web story. */}
+
+## The Pressure
+
+{/* TODO: human prose — The GIL goes from footnote to villain: multicore machines, CPU-bound Python can't scale up. */}
+{/* TODO: human prose — Web tier needs C10K-class concurrency; Twisted exists but callback style splits the community. */}
+
+## The Response
+
+{/* TODO: human prose — three simultaneous escape routes. */}
+{/* TODO: human prose — Sidestep it, processes: multiprocessing lands in 2.6/3.0 (2008, PEP 371, from pyprocessing). Not a fix, a workaround with serialization taxes — explains a decade of if __name__ == "__main__" cargo cult. */}
+{/* TODO: human prose — Hide it, implicit green threads: greenlet (extracted from Stackless ideas, Armin Rigo) → eventlet (Linden Lab / Second Life) → gevent (Denis Bilenko, 2009): monkey-patch the world. Tornado (FriendFeed → open-sourced 2009) as the pragmatic middle path. */}
+{/* TODO: human prose — Fix the GIL itself, and fail (mostly): Antoine Pitrou's new GIL (3.2, 2011); Beazley's 2010 follow-up exposes the convoy effect. Unladen Swallow (2009, PEP 3146) fizzles by 2011. Psyco retired for PyPy, the perennial "just use PyPy" answer production mostly doesn't take. */}
+
+## The Fight
+
+{/* TODO: human prose — Beazley's "Inside the Python GIL" (ChiPy 2009) + "Understanding the Python GIL" (PyCon 2010). */}
+<ArchiveCard subject="SOURCE-NEEDED — Beazley, Inside the Python GIL (ChiPy 2009)" />
+<ArchiveCard subject="SOURCE-NEEDED — Beazley, Understanding the Python GIL (PyCon 2010)" />
+
+{/* TODO: human prose — python-dev threads on the new GIL and the convoy-effect bug report. */}
+<ArchiveCard subject="SOURCE-NEEDED — python-dev thread: the new GIL / convoy effect" />
+<p><Verify>convoy-effect bug number</Verify></p>
+
+{/* TODO: human prose — gevent-vs-Twisted flame threads: implicit vs explicit, round one. */}
+<ArchiveCard subject="SOURCE-NEEDED — gevent vs Twisted flame thread" />
+
+{/* TODO: human prose — first-person sidebar, "field report": the author's production gevent/greenlet locking bug at an ML inference platform doing 1M+ requests/day. The site's "I was there" moment. */}
+<ArchiveCard subject="SOURCE-NEEDED — field report: gevent locking bug, 1M+ req/day" />
+
+<GilMachine states={['A', 'B']} />
+
+## Why Your Code Looks Like This
+
+{/* TODO: human prose — why threading exists but nobody trusts it for CPU work; why multiprocessing exists at all; why every 2010s Python shop had a gevent scar or a Twisted scar; why "the GIL" is the first thing interviewers ask about. */}
+
+## Sources
+
+{/* TODO: human links — resolve each to a primary source. */}
+- Sutter's essay — SOURCE-NEEDED
+- Beazley's two GIL talks — SOURCE-NEEDED
+- PEP 371 — SOURCE-NEEDED
+- Unladen Swallow retrospective — SOURCE-NEEDED
+- gevent announcement post — SOURCE-NEEDED

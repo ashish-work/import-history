@@ -1,50 +1,15 @@
 ---
-// ponytail: placeholder route until M4 replaces it with MDX content collections
-import PageShell from '../../layouts/PageShell.astro';
-import GilMachine from '../../components/GilMachine.astro';
-import EraBanner from '../../components/EraBanner.astro';
-import episodes from '../../data/episodes.json';
+import { getCollection, render } from 'astro:content';
+import EpisodeLayout from '../../layouts/EpisodeLayout.astro';
 
-export function getStaticPaths() {
-  return episodes.map((e) => ({ params: { slug: e.slug }, props: { episode: e } }));
+export async function getStaticPaths() {
+  const episodes = await getCollection('episodes');
+  return episodes.map((ep) => ({ params: { slug: ep.id }, props: { ep } }));
 }
 
-const { episode } = Astro.props;
+const { ep } = Astro.props;
+const { Content } = await render(ep);
 ---
-<PageShell title={`E${String(episode.number).padStart(2, '0')} — ${episode.title} · import history`}>
-  <article style={`--accent: var(--${episode.accent})`}>
-    <p class="ep-num">EPISODE {String(episode.number).padStart(2, '0')}</p>
-    <h1>{episode.title}</h1>
-    <p class="ep-era">{episode.subtitle ? `${episode.subtitle} · ` : ''}{episode.years}</p>
-    <p class="ep-teaser">{episode.teaser}</p>
-    <EraBanner />
-    {episode.number === 3 && <GilMachine states={['A', 'B']} />}
-    <p><a href="/">← Back to the timeline</a></p>
-  </article>
-
-  <style>
-    article {
-      padding: calc(var(--grid) * 6) 0;
-    }
-    .ep-num {
-      font-family: var(--font-display);
-      font-size: 12px;
-      color: var(--accent);
-      margin: 0 0 calc(var(--grid) * 2);
-    }
-    h1 {
-      font-size: 20px;
-      color: var(--accent);
-      margin: 0 0 calc(var(--grid) * 2);
-    }
-    .ep-era {
-      font-family: var(--font-terminal);
-      font-size: 20px;
-      color: var(--dim);
-      margin: 0 0 calc(var(--grid) * 3);
-    }
-    .ep-teaser {
-      margin: 0 0 calc(var(--grid) * 4);
-    }
-  </style>
-</PageShell>
+<EpisodeLayout {...ep.data}>
+  <Content />
+</EpisodeLayout>

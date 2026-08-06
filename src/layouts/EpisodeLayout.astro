@@ -92,11 +92,26 @@ const next = episodes.find((e) => e.number === number + 1);
     box-shadow: 6px 6px 0 var(--accent);
     margin: 0 0 calc(var(--grid) * 4);
   }
-  /* prose defaults for MDX content */
+  /* prose defaults for MDX content (Tailwind preflight zeroes these) */
   .ep-body :global(h2) {
     font-size: 14px;
     color: var(--accent);
-    margin: calc(var(--grid) * 6) 0 calc(var(--grid) * 2);
+    margin: calc(var(--grid) * 6) 0 calc(var(--grid) * 3);
+  }
+  .ep-body :global(p) {
+    margin: 0 0 calc(var(--grid) * 3);
+  }
+  .ep-body :global(ul) {
+    margin: 0 0 calc(var(--grid) * 3);
+    padding-left: calc(var(--grid) * 3);
+    list-style: square;
+  }
+  .ep-body :global(li) {
+    margin-bottom: var(--grid);
+  }
+  .ep-body :global(code) {
+    color: var(--py-yellow);
+    font-size: 15px;
   }
   .ep-body :global(a) {
     color: var(--py-blue);

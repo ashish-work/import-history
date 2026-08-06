@@ -1,0 +1,189 @@
+---
+// The signature element. GSAP labeled states, scroll-scrubbed with snap.
+// Episode 3 mounts A→B; episode 8 mounts B→C (state C lands in M6).
+interface Props {
+  states?: string[];
+}
+const { states = ['A', 'B'] } = Astro.props;
+
+const LANES = [72, 152, 232, 312]; // y of each thread lane, 8px grid
+const SEGS = Array.from({ length: 10 }); // CPU meter, bottom-up
+---
+<section class="gil-wrap" data-states={states.join(',')}>
+  <figure class="gil-figure">
+    <svg
+      viewBox="0 0 640 400"
+      shape-rendering="crispEdges"
+      role="img"
+      aria-label="The GIL Machine: four thread lanes share one padlock while a CPU meter shows utilization"
+    >
+      <!-- core grid background: state A = one core, state B = four cores -->
+      <rect class="core-a" x="40" y="64" width="448" height="304" fill="var(--surface)" stroke="var(--phosphor)" stroke-width="2" />
+      <g class="core-b" opacity="0">
+        <rect x="40" y="64" width="220" height="148" fill="var(--surface)" stroke="var(--phosphor)" stroke-width="2" />
+        <rect x="268" y="64" width="220" height="148" fill="var(--surface)" stroke="var(--phosphor)" stroke-width="2" />
+        <rect x="40" y="220" width="220" height="148" fill="var(--surface)" stroke="var(--phosphor)" stroke-width="2" />
+        <rect x="268" y="220" width="220" height="148" fill="var(--surface)" stroke="var(--phosphor)" stroke-width="2" />
+        <!-- three cores rendered dark in state B -->
+        <rect class="core-shade" x="268" y="64" width="220" height="148" fill="var(--bg)" opacity="0" />
+        <rect class="core-shade" x="40" y="220" width="220" height="148" fill="var(--bg)" opacity="0" />
+        <rect class="core-shade" x="268" y="220" width="220" height="148" fill="var(--bg)" opacity="0" />
+      </g>
+
+      <!-- thread lanes -->
+      {LANES.map((y, i) => (
+        <g>
+          <rect x="40" y={y} width="448" height="48" fill="none" stroke="var(--dim)" stroke-width="2" opacity="0.5" />
+          <g transform={`translate(56 ${y + 8}) scale(2)`}>
+            <g class="runner" data-lane={i} color="var(--dim)">
+              <rect x="4" y="0" width="8" height="4" fill="currentColor" />
+              <rect x="2" y="4" width="12" height="6" fill="currentColor" />
+              <rect x="2" y="10" width="4" height="6" fill="currentColor" />
+              <rect x="10" y="10" width="4" height="6" fill="currentColor" />
+            </g>
+          </g>
+        </g>
+      ))}
+
+      <!-- the padlock: hops lane to lane in discrete jumps -->
+      <g class="lock" transform={`translate(448 ${LANES[0] + 8}) scale(2)`} fill="var(--amber)">
+        <rect x="4" y="0" width="8" height="2" />
+        <rect x="2" y="2" width="2" height="6" />
+        <rect x="12" y="2" width="2" height="6" />
+        <rect x="0" y="8" width="16" height="8" />
+        <rect x="7" y="10" width="2" height="4" fill="var(--bg)" />
+      </g>
+
+      <!-- 10-segment CPU meter, fills bottom-up -->
+      <g class="meter">
+        {SEGS.map((_, i) => (
+          <rect
+            class="seg"
+            data-seg={i}
+            x="552"
+            width="48"
+            height="24"
+            y={368 - 8 - i * 32}
+            fill="var(--phosphor)"
+          />
+        ))}
+      </g>
+      <text x="576" y="24" text-anchor="middle" font-family="'Press Start 2P', monospace" font-size="12" fill="var(--dim)">CPU</text>
+
+      <!-- era stamp -->
+      <text class="era era-a" x="488" y="40" text-anchor="end" font-family="VT323, monospace" font-size="40" fill="var(--amber)">1991</text>
+      <text class="era era-b" x="488" y="40" text-anchor="end" font-family="VT323, monospace" font-size="40" fill="var(--amber)" opacity="0">2006</text>
+    </svg>
+
+    <figcaption>
+      <p class="cap cap-a">1991: one core. The lock passes around — 100% utilization. The GIL was the right call.</p>
+      <p class="cap cap-b">2006: the free lunch ends. The same lock dance on four cores — utilization collapses to 25%.</p>
+      <p class="cap-foot"><slot name="footnote">A metaphor, not a scheduler simulation.</slot></p>
+    </figcaption>
+  </figure>
+</section>
+
+<style>
+  .gil-wrap {
+    margin: calc(var(--grid) * 6) 0;
+  }
+  .gil-figure {
+    margin: 0;
+    background: var(--bg);
+  }
+  svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 2px solid var(--surface);
+  }
+  figcaption {
+    position: relative;
+    min-height: calc(var(--grid) * 12);
+    padding-top: calc(var(--grid) * 2);
+  }
+  .cap {
+    position: absolute;
+    top: calc(var(--grid) * 2);
+    left: 0;
+    right: 0;
+    margin: 0;
+    font-family: var(--font-terminal);
+    font-size: 22px;
+    line-height: 1.3;
+    color: var(--ink);
+  }
+  .cap-b {
+    opacity: 0;
+  }
+  .cap-foot {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    margin: 0;
+    font-size: 12px;
+    color: var(--dim);
+  }
+</style>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const LANE_Y = [80, 160, 240, 320]; // lane y + 8, matches SVG sprite offsets
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  document.querySelectorAll<HTMLElement>('.gil-wrap').forEach((wrap) => {
+    const q = gsap.utils.selector(wrap);
+    const segs = q('.seg');
+    const darkSegs = segs.filter((s) => Number((s as SVGElement).dataset.seg) >= 3);
+
+    // ── scrubbed master timeline: state A → state B ──────────────
+    const master = gsap.timeline({ paused: true });
+    master.addLabel('A', 0);
+    master.to(q('.core-a'), { opacity: 0, duration: 0.2, ease: 'steps(1)' }, 0.4);
+    master.to(q('.core-b'), { opacity: 1, duration: 0.2, ease: 'steps(1)' }, 0.4);
+    master.to(q('.core-shade'), { opacity: 0.7, duration: 0.2, ease: 'steps(2)', stagger: 0.05 }, 0.5);
+    master.to(darkSegs, { opacity: 0.12, duration: 0.3, ease: 'steps(1)', stagger: 0.04 }, 0.45);
+    master.to(q('.era-a'), { opacity: 0, duration: 0.1, ease: 'steps(1)' }, 0.5);
+    master.to(q('.era-b'), { opacity: 1, duration: 0.1, ease: 'steps(1)' }, 0.5);
+    master.to(q('.cap-a'), { opacity: 0, duration: 0.1, ease: 'steps(1)' }, 0.5);
+    master.to(q('.cap-b'), { opacity: 1, duration: 0.1, ease: 'steps(1)' }, 0.5);
+    master.addLabel('B', 1);
+    // TODO M6: state C ("2024+") — padlock dissolves in 3 step-frames, all
+    // four lanes animate, meter refills to 10/10. Built when episode 8 mounts B→C.
+
+    if (reduced) {
+      // final frame of state B, no scrubbing, no loop
+      master.progress(1);
+      return;
+    }
+
+    ScrollTrigger.create({
+      trigger: wrap,
+      start: 'top top',
+      end: '+=200%',
+      pin: wrap.querySelector('.gil-figure'),
+      scrub: true,
+      snap: { snapTo: 'labels', duration: { min: 0.1, max: 0.3 }, ease: 'steps(1)' },
+      onUpdate: (self) => master.progress(self.progress),
+    });
+
+    // ── the lock dance: time-driven loop, identical in both states ──
+    const lock = q('.lock')[0];
+    const runners = q('.runner');
+    const dance = gsap.timeline({ repeat: -1 });
+    LANE_Y.forEach((y, i) => {
+      const t = i * 0.8;
+      dance.set(lock, { attr: { transform: `translate(448 ${y}) scale(2)` } }, t);
+      runners.forEach((r, j) => {
+        dance.set(r, { color: j === i ? 'var(--phosphor)' : 'var(--dim)' }, t);
+      });
+      // the lock holder takes a few steps forward, then resets (16 local = 32 viewBox px at scale 2)
+      dance.to(runners[i], { x: 16, duration: 0.4, ease: 'steps(2)' }, t);
+      dance.to(runners[i], { x: 0, duration: 0.4, ease: 'steps(2)' }, t + 0.4);
+    });
+  });
+</script>

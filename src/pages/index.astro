@@ -1,11 +1,13 @@
 ---
 import PageShell from '../layouts/PageShell.astro';
+import DualTimeline from '../components/DualTimeline.astro';
+import episodes from '../data/episodes.json';
 ---
 <PageShell>
   <section class="hero">
-    <p class="stamp">[ SIGNAL ACQUIRED ▮ ]</p>
+    <p class="stamp">[ SIGNAL ACQUIRED <span class="cursor"></span> ]</p>
     <h1>import history</h1>
-    <p class="subtitle">An 8-bit documentary about Python's evolution.</p>
+    <p class="subtitle">An 8-bit documentary about Python's evolution — the fights, the people, and the industry pressure behind every feature.</p>
   </section>
 
   <section class="thesis pixel-border">
@@ -16,7 +18,33 @@ import PageShell from '../layouts/PageShell.astro';
     </p>
   </section>
 
-  <!-- M1: DualTimeline + episode grid land here -->
+  <section aria-label="Dual timeline: the industry vs Python releases">
+    <h2>THE PRESSURE LINE</h2>
+    <DualTimeline />
+  </section>
+
+  <section aria-label="Episodes">
+    <h2>EPISODES</h2>
+    <ol class="ep-grid">
+      {episodes.map((e) => (
+        <li>
+          <a href={`/episodes/${e.slug}/`} class="ep-card pixel-border" style={`--accent: var(--${e.accent})`}>
+            <span class="ep-num">E{String(e.number).padStart(2, '0')}</span>
+            <span class="ep-title">{e.title}</span>
+            <span class="ep-years">{e.subtitle ? `${e.subtitle} · ` : ''}{e.years}</span>
+            <span class="ep-teaser">{e.teaser}</span>
+            <span class={`ep-status ${e.status}`}>
+              {e.status === 'full' ? '▶ WATCH' : '[ IN PRODUCTION ]'}
+            </span>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <p class="methodology">
+    Written from the primary sources: python-dev, PEPs, and the people who were there.
+  </p>
 
   <style>
     .hero {
@@ -37,16 +65,86 @@ import PageShell from '../layouts/PageShell.astro';
       color: var(--dim);
       margin: 0;
     }
+    h2 {
+      font-size: 14px;
+      color: var(--ink);
+      margin: calc(var(--grid) * 8) 0 calc(var(--grid) * 3);
+    }
     .thesis {
       background: var(--surface);
       padding: calc(var(--grid) * 3);
-      margin: calc(var(--grid) * 4) 0 calc(var(--grid) * 8);
+      margin: calc(var(--grid) * 4) 0 calc(var(--grid) * 6);
     }
-    .thesis p {
+    .thesis p { margin: 0; }
+    .thesis strong { color: var(--py-yellow); }
+
+    .ep-grid {
+      list-style: none;
       margin: 0;
+      padding: 0;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: calc(var(--grid) * 3);
     }
-    .thesis strong {
-      color: var(--py-yellow);
+    @media (min-width: 768px) {
+      .ep-grid { grid-template-columns: 1fr 1fr; }
+    }
+    .ep-card {
+      display: flex;
+      flex-direction: column;
+      gap: var(--grid);
+      height: 100%;
+      box-sizing: border-box;
+      padding: calc(var(--grid) * 2);
+      background: var(--surface);
+      border-color: var(--accent);
+      box-shadow: 6px 6px 0 var(--accent);
+      text-decoration: none;
+      color: var(--ink);
+    }
+    .ep-card:hover {
+      background: var(--accent);
+      color: var(--bg);
+    }
+    .ep-card:hover .ep-num,
+    .ep-card:hover .ep-years,
+    .ep-card:hover .ep-teaser,
+    .ep-card:hover .ep-status {
+      color: var(--bg);
+    }
+    .ep-num {
+      font-family: var(--font-display);
+      font-size: 12px;
+      color: var(--accent);
+    }
+    .ep-title {
+      font-family: var(--font-display);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+    .ep-years {
+      font-family: var(--font-terminal);
+      font-size: 20px;
+      color: var(--dim);
+    }
+    .ep-teaser {
+      font-size: 14px;
+      color: var(--dim);
+    }
+    .ep-status {
+      font-family: var(--font-terminal);
+      font-size: 20px;
+      margin-top: auto;
+    }
+    .ep-status.full { color: var(--phosphor); }
+    .ep-status.stub { color: var(--amber); }
+
+    .methodology {
+      font-family: var(--font-terminal);
+      font-size: 20px;
+      color: var(--dim);
+      margin: calc(var(--grid) * 8) 0 calc(var(--grid) * 4);
+      text-align: center;
     }
   </style>
 </PageShell>

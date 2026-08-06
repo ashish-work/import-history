@@ -1,0 +1,230 @@
+---
+import episodes from '../data/episodes.json';
+import timeline from '../data/timeline.json';
+
+interface Item {
+  kind: 'era' | 'industry' | 'release';
+  year: number;
+  sort: number; // era bands sort before events of the same year
+  label: string;
+  detail?: string;
+  verify?: boolean;
+  years?: string;
+  slug?: string;
+  number?: number;
+  status?: string;
+  accent?: string;
+}
+
+const items: Item[] = [
+  ...episodes.map((e): Item => ({
+    kind: 'era',
+    year: e.startYear,
+    sort: 0,
+    label: e.title,
+    years: e.years,
+    slug: e.slug,
+    number: e.number,
+    status: e.status,
+    accent: e.accent,
+  })),
+  ...timeline.industry.map((t): Item => ({ kind: 'industry', sort: 1, ...t })),
+  ...timeline.releases.map((t): Item => ({ kind: 'release', sort: 1, ...t })),
+].sort((a, b) => a.year - b.year || a.sort - b.sort);
+---
+<div class="dual-timeline">
+  <p class="tl-legend">
+    <span class="tl-side">◀ THE INDUSTRY</span>
+    <span class="tl-side">PYTHON ▶</span>
+  </p>
+  <ol class="tl-list">
+    {items.map((item) =>
+      item.kind === 'era' ? (
+        <li class="tl-row tl-era" style={`--accent: var(--${item.accent})`}>
+          <a href={`/episodes/${item.slug}/`} class="era-band">
+            <span class="era-num">E{String(item.number).padStart(2, '0')}</span>
+            <span class="era-title">{item.label}</span>
+            <span class="era-years">{item.years}</span>
+            {item.status === 'stub' && <span class="era-status">[ IN PRODUCTION ]</span>}
+          </a>
+        </li>
+      ) : (
+        <li class={`tl-row tl-event tl-${item.kind}`}>
+          <div class="tl-cell">
+            <span class="tl-year">{item.year}</span>
+            <span class="tl-label">
+              {item.label}
+              {item.verify && <span class="tl-verify">[VERIFY]</span>}
+            </span>
+            {item.detail && <span class="tl-detail">{item.detail}</span>}
+          </div>
+          <span class="tl-node" aria-hidden="true"></span>
+        </li>
+      )
+    )}
+  </ol>
+</div>
+
+<style>
+  .dual-timeline {
+    margin: calc(var(--grid) * 4) 0;
+  }
+  .tl-legend {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-display);
+    font-size: 12px;
+    color: var(--dim);
+    margin: 0 0 calc(var(--grid) * 2);
+  }
+  .tl-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: relative;
+  }
+  /* center rail */
+  .tl-list::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 2px;
+    margin-left: -1px;
+    background: var(--surface);
+  }
+  .tl-row {
+    position: relative;
+    margin: calc(var(--grid) * 2) 0;
+  }
+
+  /* events: two columns around the rail */
+  .tl-event {
+    display: grid;
+    grid-template-columns: 1fr calc(var(--grid) * 4) 1fr;
+  }
+  .tl-industry .tl-cell {
+    grid-column: 1;
+    text-align: right;
+  }
+  .tl-release .tl-cell {
+    grid-column: 3;
+    text-align: left;
+  }
+  .tl-cell {
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font-terminal);
+    font-size: 20px;
+    line-height: 1.2;
+  }
+  .tl-year {
+    color: var(--dim);
+  }
+  .tl-industry .tl-label { color: var(--ink); }
+  .tl-release .tl-label { color: var(--py-yellow); }
+  .tl-detail {
+    color: var(--dim);
+  }
+  .tl-verify {
+    color: var(--alert);
+    margin-left: var(--grid);
+  }
+  /* 8×8 pixel node on the rail */
+  .tl-node {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: center;
+    align-self: start;
+    margin-top: var(--grid);
+    width: var(--grid);
+    height: var(--grid);
+    background: var(--py-yellow);
+  }
+  .tl-industry .tl-node { background: var(--ink); }
+
+  /* era bands: full-width tinted blocks linking to episodes */
+  .tl-era {
+    margin: calc(var(--grid) * 4) 0;
+  }
+  .era-band {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--grid) calc(var(--grid) * 2);
+    padding: calc(var(--grid) * 2);
+    min-height: 44px;
+    text-decoration: none;
+    color: var(--ink);
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+    border-left: 4px solid var(--accent);
+  }
+  .era-band:hover {
+    background: var(--accent);
+    color: var(--bg);
+  }
+  .era-band:hover .era-num,
+  .era-band:hover .era-years,
+  .era-band:hover .era-status {
+    color: var(--bg);
+  }
+  .era-num {
+    font-family: var(--font-display);
+    font-size: 12px;
+    color: var(--accent);
+  }
+  .era-title {
+    font-family: var(--font-display);
+    font-size: 12px;
+  }
+  .era-years,
+  .era-status {
+    font-family: var(--font-terminal);
+    font-size: 20px;
+    color: var(--dim);
+  }
+  .era-status {
+    color: var(--amber);
+  }
+
+  /* stepped entrance pop */
+  .tl-row {
+    opacity: 0;
+  }
+  .tl-row.in {
+    animation: tl-pop 240ms steps(3, end) forwards;
+  }
+  @keyframes tl-pop {
+    from {
+      opacity: 0;
+      transform: scale(0.92);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tl-row {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>
+
+<script>
+  const rows = document.querySelectorAll('.tl-row');
+  const io = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in');
+          io.unobserve(entry.target);
+        }
+      });
+    },
+    { rootMargin: '0px 0px -10% 0px' }
+  );
+  rows.forEach((r) => io.observe(r));
+</script>

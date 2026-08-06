@@ -1,0 +1,29 @@
+{
+  "_note": "Seeded ONLY from content-outline.md. verify:true = year not stated in the outline; rendered with a [VERIFY] badge until checked against a primary source.",
+  "industry": [
+    { "year": 1993, "label": "Mosaic", "verify": true },
+    { "year": 1999, "label": "C10K problem named (Dan Kegel)" },
+    { "year": 2000, "label": "Dot-com crash", "verify": true },
+    { "year": 2005, "label": "Sutter: \"The Free Lunch Is Over\"" },
+    { "year": 2006, "label": "Intel Core Duo ships" },
+    { "year": 2007, "label": "iPhone", "verify": true },
+    { "year": 2009, "label": "Node.js at JSConf EU" },
+    { "year": 2013, "label": "Docker" },
+    { "year": 2015, "label": "TensorFlow" },
+    { "year": 2022, "label": "ChatGPT" }
+  ],
+  "releases": [
+    { "year": 1991, "label": "Python 0.9.0", "detail": "posted to alt.sources" },
+    { "year": 1992, "label": "Threads — and the GIL", "verify": true },
+    { "year": 1994, "label": "Python 1.0", "detail": "lambda, map, filter, reduce" },
+    { "year": 2000, "label": "Python 2.0", "detail": "list comprehensions, GC, u'', the PEP process" },
+    { "year": 2001, "label": "Python 2.2", "detail": "generators, new-style classes" },
+    { "year": 2006, "label": "Python 2.5", "detail": "with, generator.send()" },
+    { "year": 2008, "label": "Python 3.0", "detail": "str/bytes split — almost nobody upgrades" },
+    { "year": 2011, "label": "Python 3.2", "detail": "the new GIL" },
+    { "year": 2015, "label": "Python 3.5", "detail": "async/await, typing, @" },
+    { "year": 2020, "label": "Python 2.7.18", "detail": "the schism ends" },
+    { "year": 2024, "label": "Python 3.13", "detail": "experimental free-threaded build", "verify": true },
+    { "year": 2025, "label": "Python 3.14", "detail": "free-threading officially supported" }
+  ]
+}

@@ -1,0 +1,90 @@
+[
+  {
+    "number": 1,
+    "slug": "01",
+    "title": "A Language for Christmas",
+    "subtitle": "Origins",
+    "years": "1989–1999",
+    "startYear": 1989,
+    "status": "stub",
+    "accent": "phosphor",
+    "teaser": "A bored researcher, a Christmas holiday, and a teaching language nobody wanted — plus the most consequential lock in programming history, added without a fight."
+  },
+  {
+    "number": 2,
+    "slug": "02",
+    "title": "The Web Arrives",
+    "subtitle": "",
+    "years": "1995–2005",
+    "startYear": 1995,
+    "status": "stub",
+    "accent": "py-blue",
+    "teaser": "The dot-com boom turns a scripting language into a server language — and quietly plants both seeds of the concurrency war."
+  },
+  {
+    "number": 3,
+    "slug": "03",
+    "title": "The Free Lunch Is Over",
+    "subtitle": "",
+    "years": "2005–2012",
+    "startYear": 2005,
+    "status": "full",
+    "accent": "amber",
+    "teaser": "The concurrency crisis. The GIL becomes the villain; the community routes around it twice."
+  },
+  {
+    "number": 4,
+    "slug": "04",
+    "title": "The Accidental Gift",
+    "subtitle": "The Science Invasion",
+    "years": "2001–2015",
+    "startYear": 2001,
+    "status": "full",
+    "accent": "py-yellow",
+    "teaser": "The GIL pushed compute into C — and the C ecosystem is exactly why science chose Python. The flaw causes the win."
+  },
+  {
+    "number": 5,
+    "slug": "05",
+    "title": "Two Pythons",
+    "subtitle": "The Schism",
+    "years": "2008–2020",
+    "startYear": 2008,
+    "status": "stub",
+    "accent": "amber",
+    "teaser": "Guido breaks the world over strings. It takes twelve years, two economic crises, and a peace-offering u'' to put it back together."
+  },
+  {
+    "number": 6,
+    "slug": "06",
+    "title": "Scripts Become Systems",
+    "subtitle": "",
+    "years": "2012–2018",
+    "startYear": 2012,
+    "status": "stub",
+    "accent": "py-blue",
+    "teaser": "Dropbox and Instagram hit millions of lines of untyped Python, Node steals the async crown, and the language grows types and await in self-defense."
+  },
+  {
+    "number": 7,
+    "slug": "07",
+    "title": "The Abdication",
+    "subtitle": "",
+    "years": "2018–2019",
+    "startYear": 2018,
+    "status": "stub",
+    "accent": "phosphor",
+    "teaser": "A two-character operator triggers a succession crisis. The purest primary-source episode: the resignation email, timestamped."
+  },
+  {
+    "number": 8,
+    "slug": "08",
+    "title": "The Lock Comes Off",
+    "subtitle": "AI Coronation & the Speed Reckoning",
+    "years": "2015–now",
+    "startYear": 2015,
+    "status": "full",
+    "accent": "py-yellow",
+    "teaser": "The ecosystem the GIL accidentally created comes back to remove it. Full circle; roll credits."
+  }
+]

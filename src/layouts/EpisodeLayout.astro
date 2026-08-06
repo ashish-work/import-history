@@ -1,4 +1,6 @@
 ---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
 import PageShell from './PageShell.astro';
 import episodes from '../data/episodes.json';
 
@@ -8,8 +10,9 @@ interface Props {
   era: string;
   accent: string;
   status: 'full' | 'stub';
+  image?: ImageMetadata;
 }
-const { number, title, era, accent, status } = Astro.props;
+const { number, title, era, accent, status, image } = Astro.props;
 const num = String(number).padStart(2, '0');
 const next = episodes.find((e) => e.number === number + 1);
 ---
@@ -19,6 +22,15 @@ const next = episodes.find((e) => e.number === number + 1);
       <p class="ep-num">EPISODE {num}</p>
       <h1>{title}</h1>
       <p class="ep-era">{era}</p>
+      {image && (
+        <Image
+          src={image}
+          alt={`Episode ${num} artwork — ${title}`}
+          widths={[390, 780, 1400]}
+          sizes="(max-width: 780px) 100vw, 780px"
+          class="ep-poster pixel-border"
+        />
+      )}
     </header>
 
     <div class="ep-body">
@@ -61,6 +73,14 @@ const next = episodes.find((e) => e.number === number + 1);
     font-family: var(--font-terminal);
     font-size: 20px;
     color: var(--dim);
+    margin: 0 0 calc(var(--grid) * 4);
+  }
+  .ep-poster {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-color: var(--accent);
+    box-shadow: 6px 6px 0 var(--accent);
     margin: 0 0 calc(var(--grid) * 4);
   }
   /* prose defaults for MDX content */

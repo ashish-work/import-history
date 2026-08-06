@@ -1,7 +1,14 @@
 ---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
 import PageShell from '../layouts/PageShell.astro';
 import DualTimeline from '../components/DualTimeline.astro';
 import episodes from '../data/episodes.json';
+
+const posters = import.meta.glob<{ default: ImageMetadata }>('../content/episodes/*.png', {
+  eager: true,
+});
+const posterFor = (slug: string) => posters[`../content/episodes/${slug}.png`]?.default;
 ---
 <PageShell>
   <section class="hero">
@@ -29,6 +36,15 @@ import episodes from '../data/episodes.json';
       {episodes.map((e) => (
         <li>
           <a href={`/episodes/${e.slug}/`} class="ep-card pixel-border" style={`--accent: var(--${e.accent})`}>
+            {posterFor(e.slug) && (
+              <Image
+                src={posterFor(e.slug)!}
+                alt=""
+                widths={[390, 780]}
+                sizes="(max-width: 768px) 100vw, 390px"
+                class="ep-thumb"
+              />
+            )}
             <span class="ep-num">E{String(e.number).padStart(2, '0')}</span>
             <span class="ep-title">{e.title}</span>
             <span class="ep-years">{e.subtitle ? `${e.subtitle} · ` : ''}{e.years}</span>
@@ -111,6 +127,15 @@ import episodes from '../data/episodes.json';
     .ep-card:hover .ep-teaser,
     .ep-card:hover .ep-status {
       color: var(--bg);
+    }
+    .ep-thumb {
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 2 / 1;
+      object-fit: cover;
+      border: 2px solid var(--accent);
+      margin-bottom: var(--grid);
     }
     .ep-num {
       font-family: var(--font-display);

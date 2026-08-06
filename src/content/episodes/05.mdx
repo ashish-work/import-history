@@ -54,7 +54,14 @@ The end came slowly, then all at once. Python 2.7's end-of-life was pushed five 
 
 Why did it take twelve years? Not because anyone was lazy, and not because Python 3 was bad. It took twelve years because the ecosystem locked itself into a deadlock with no villain in it. Application developers could not move to Python 3 until the libraries they depended on ran there — nobody rewrites their app onto a platform where its dependencies do not exist. Library maintainers, volunteers almost to a person, could not justify porting for an audience of nobody — why spend nights and weekends migrating code for users who have not arrived? Each side was waiting, rationally, for the other to move first. That is a chicken-and-egg deadlock, and its signature is that everyone is behaving sensibly while the system as a whole goes nowhere. The mailing-list threads repeat it like a chorus: users wait for libraries, libraries wait for users.
 
-<ArchiveCard subject="SOURCE-NEEDED — chicken-and-egg deadlock thread" />
+<ArchiveCard
+  from="Paul Moore (CPython core developer)"
+  date="November 3, 2009"
+  subject="Re: [Python-Dev] 2.7 Release? 2.7 == last of the 2.x line?"
+  href="https://mail.python.org/archives/list/python-dev@python.org/message/L55N2HSWMAROH5HVPMRS6N2KY7CLTFNV/"
+>
+"I don't use Python 3, so I don't test the new features, so the projects I need see little take-up, so I can't use them in Python 3, so I don't use Python 3..."
+</ArchiveCard>
 
 The loudest late battle came in November 2016 — eight years in, with the deadlock finally cracking. Zed Shaw published "The Case Against Python 3 (For Now)," arguing the migration was broken. The next day, Eevee published a point-by-point rebuttal. Read together, they are the schism in miniature: exhaustion on one side, exasperation on the other, and real grievances underneath both.
 

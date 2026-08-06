@@ -91,11 +91,25 @@ Now say the full-circle beat out loud, because it is the whole series in four mo
 
 The community's deepest fear surfaced by name: will there be two Pythons again? It wasn't paranoia — it was arithmetic. A free-threaded interpreter has a different ABI, which means every compiled extension has to be built for it separately: the `cp313t` builds, distinct wheels for the same package on the same Python version. Squint and it looks like the opening frames of episode 5 — an ecosystem split down the middle, libraries waiting for users, users waiting for libraries. The abi and wheel debates were argued explicitly in that shadow, which is precisely why the acceptance came wrapped in phases and an escape hatch.
 
-<ArchiveCard subject="SOURCE-NEEDED — two-Pythons-again / cp313t wheel debate" />
+<ArchiveCard
+  from="Thomas Wouters (for the Steering Council)"
+  date="July 28, 2023"
+  subject="The SC on the split risk, in the PEP 703 notice"
+  href="https://discuss.python.org/t/a-steering-council-notice-about-pep-703-making-the-global-interpreter-lock-optional-in-cpython/30474"
+>
+"We do not want another Python 3 situation. ... We do not want to create a permanent split between with-GIL and no-GIL builds (and extension modules)."
+</ArchiveCard>
 
 And the two funded fronts tugged against each other, because their tricks collide. Specialization works by rewriting bytecode in place based on what one thread has observed — cheap and safe when a lock guarantees only one thread runs at a time. Remove the lock, and those adaptive rewrites become shared mutable state: two threads racing through the same function can disagree about what the instruction underneath them currently is. Every optimization the Faster CPython team built on single-threaded assumptions has to be re-derived for a world without them. The tension threads between the two teams are their own genre.
 
-<ArchiveCard subject="SOURCE-NEEDED — specialization vs free-threading tension thread" />
+<ArchiveCard
+  from="Mark Shannon (Faster CPython lead)"
+  date="June 2, 2023"
+  subject="PEP 703 (3.12 updates) — the two fronts collide"
+  href="https://discuss.python.org/t/pep-703-making-the-global-interpreter-lock-optional-3-12-updates/26503/9"
+>
+"The adaptive specializing interpreter relies on the GIL; it is not thread-friendly. If NoGIL is accepted, then some redesign of our optimization strategy will be necessary."
+</ArchiveCard>
 
 ## Why Your Code Looks Like This
 

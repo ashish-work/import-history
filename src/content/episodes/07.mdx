@@ -11,7 +11,7 @@ import ColdOpen from '../../components/ColdOpen.astro';
 import ArchiveCard from '../../components/ArchiveCard.astro';
 import Verify from '../../components/Verify.astro';
 
-{/* Draft prose by Claude, built strictly from content-outline.md. Review before publishing. */}
+{/* Expanded draft — review before publishing. */}
 
 <ColdOpen
   stamp="July 12, 2018, python-committers."
@@ -20,17 +20,39 @@ import Verify from '../../components/Verify.astro';
 
 ## The World
 
-By 2018, Python was critical infrastructure — a top-three language on every index — and python-dev's volume and temperature scaled with the userbase. "Benevolent Dictator For Life" had been a joke title from 1995. Now it carried a real industry, and the weight was no longer funny.
+Start with the title, because the title is the whole problem.
+
+"Benevolent Dictator For Life" was a joke from 1995 — the kind of name a small open-source community gives its founder when the stakes are a mailing list and a hobby. It described a governance model so informal it barely counted as one: arguments happen in public, and when they go on long enough, one person decides. The dictator reads everything, weighs everything, and rules. Everyone accepts the ruling because the dictator is, well, benevolent — and because he wrote the language you are arguing about.
+
+That model has a known failure mode, and it is not tyranny. It is exhaustion. A BDFL is a single point of decision, which makes him a single point of burnout. Every controversy, however small, eventually routes through one inbox. The model scales beautifully from ten users to ten thousand. Then the userbase becomes an industry.
+
+By 2018, that is exactly what had happened. Python was critical infrastructure — a top-three language on every index — and python-dev's volume and temperature scaled with the userbase. More users meant more proposals, more proposals meant more fights, and every fight ended at the same desk it had ended at since 1991. The joke title now carried a real industry, and the weight was no longer funny.
+
+Nobody had ever asked what happens when the dictator quits. The "For Life" part was supposed to be the succession plan.
 
 ## The Pressure
 
-The proximate cause was two characters wide. PEP 572, assignment expressions — the walrus operator, `:=` — generated hundreds of messages across python-ideas and python-dev, comprehension-scoping edge cases, and "kill it with fire" energy. Guido accepted the PEP himself. Then he counted what it had cost.
+The proximate cause was two characters wide.
+
+PEP 572 proposed assignment expressions — the walrus operator, `:=`, named for what the two characters look like tipped on their side. The idea is simple to state: let a value be assigned to a name and used in the same breath, inside an expression, instead of needing its own line first. Write the check and capture the result in one motion.
+
+Simple to state. Vicious to argue. Python had spent thirty years telling programmers that assignment is a statement — a thing that happens on its own line, visible, unmissable. The walrus let assignment happen midway through a condition or a comprehension, and to its opponents that was not a convenience, it was a betrayal of the language's plainness.
+
+And then there were the comprehensions, where the fight turned truly baroque. A comprehension quietly runs in its own hidden scope — names created inside it do not leak out. But an assignment expression *inside* a comprehension escapes to the function around it, on purpose, so the captured value survives to be used afterward. Two different scoping rules, living inside the same pair of square brackets, distinguished only by whether you typed `=` or `:=`. Every edge case spawned a thread. Every thread spawned counter-examples. The debate sprawled across python-ideas and python-dev — hundreds of messages, comprehension-scoping puzzles, "kill it with fire" energy.
+
+Here is the detail the whole episode turns on: Guido was *for* it. He accepted PEP 572 himself. The dictator won the fight.
+
+Then he counted what winning had cost.
 
 ## The Fight
 
 This episode *is* the fight, so the emails should do the talking: the walrus threads, the resignation, and the governance debates that followed. Minimal narration from here.
 
-On July 12, 2018, the "Transfer of power" message landed on python-committers. "Now that PEP 572 is done, I don't ever want to have to fight so hard for a PEP and find that so many people despise my decisions," Guido wrote. "I'm basically giving myself a permanent vacation from being BDFL, and you all will be on your own." Crucially — "I am not going to appoint a successor" — and he defined no process either. His parting question: "So what are you all going to do? Create a democracy? Anarchy? A dictatorship? A federation?"
+July 12, 2018. The message lands on python-committers — not python-dev, not a blog, but the list where the people with commit rights live. The subject line is "Transfer of power." It is eleven short paragraphs, some just a single sentence, sent at 10:57 in the morning.
+
+"Now that PEP 572 is done, I don't ever want to have to fight so hard for a PEP and find that so many people despise my decisions," Guido writes. "I'm basically giving myself a permanent vacation from being BDFL, and you all will be on your own."
+
+Read it twice and notice what is missing. There is no successor: "I am not going to appoint a successor." There is no process, no transition plan, no interim authority. The man who had personally decided every hard question for twenty-seven years declines, as his final act, to decide this one. He leaves it as a question instead: "So what are you all going to do? Create a democracy? Anarchy? A dictatorship? A federation?"
 
 <ArchiveCard
   from="Guido van Rossum"
@@ -41,9 +63,19 @@ On July 12, 2018, the "Transfer of power" message landed on python-committers. "
 "I would like to remove myself entirely from the decision process. ... But I'm basically giving myself a permanent vacation from being BDFL, and you all will be on your own. ... I'll still be here, but I'm trying to let you all figure something out for yourselves. I'm tired, and need a very long break."
 </ArchiveCard>
 
+That last line is the one to sit with. This is not a strategy memo. It is a founder, in public, on the record, saying he is tired. The most human sentence in the Python archives, timestamped 10:57 in the morning.
+
 ## The Response
 
-What they did was run a constitutional convention in public. The governance bake-off — PEPs 8010 through 8016 — proposed dictators, councils, and community models, each argued in full. A Condorcet vote (December 1–16, 2018; 62 of 94 core developers voting) chose PEP 8016, authored by Nathaniel Smith and Donald Stufft. PEP 13 became the constitution. And in the election that closed February 4, 2019, the first Steering Council was chosen: Warsaw, Cannon, Willing, Coghlan — and van Rossum himself, now one vote among five.
+What they did was run a constitutional convention in public.
+
+Think about the position the core developers woke up in. A language depended on by millions had no head of state, no constitution, and no rule for making rules. Any of the classic failure modes was available: a scramble for the throne, a fork, a slow drift into paralysis. What actually happened was slower, duller, and much more impressive — they wrote proposals.
+
+The governance bake-off — PEPs 8010 through 8016 — laid out the options the way Python lays out everything: as numbered documents anyone can read. Some proposed a new dictator. Some proposed councils. Some proposed community models. Each was argued in full, in the open, the way the walrus had been — except this time the fight was about how to fight.
+
+Then they voted, and the method matters. A Condorcet vote does not ask "which one do you like best?" It asks every voter to rank all the options, then plays the options against each other in head-to-head matchups; the winner is the one that beats every rival one-on-one. For a governance decision, that is exactly the property you want — the outcome is not the loudest faction's favorite, it is the design the whole electorate can live with. A constitution chosen by plurality is a grievance; a constitution chosen by Condorcet is a consensus.
+
+The vote ran December 1–16, 2018, with 62 of 94 core developers casting ballots. PEP 8016 — the steering council model, authored by Nathaniel Smith and Donald Stufft — won, and became PEP 13, the constitution.
 
 <ArchiveCard
   from="Ernest W. Durbin III"
@@ -52,11 +84,15 @@ What they did was run a constitutional convention in public. The governance bake
   href="https://discuss.python.org/t/python-governance-vote-december-2018-results/546"
 />
 
-The consequences arrived quickly: PEP 602 set an annual release cadence in 2019. And it would be this Steering Council — not a BDFL — that later makes the single biggest technical call in the language's history. That's episode 8.
+What does a steering council trade away? Speed, and vision. Five people deliberate slower than one decides, and a committee will never have a dictator's singular taste. What it buys is the thing the old model fatally lacked: no single point of burnout. Members share the load, disagree safely, and get replaced by election. Nobody's exhaustion can ever again decapitate the language.
+
+In the election that closed February 4, 2019, the first Steering Council was chosen: Warsaw, Cannon, Willing, Coghlan — and van Rossum himself. The dictator, five months after abdicating, returns as one vote among five. The consequences arrived quickly: PEP 602 set an annual release cadence in 2019 — a schedule, decided by process, where once there would have been one man's judgment. And it would be this Steering Council — not a BDFL — that later makes the single biggest technical call in the language's history. That's episode 8.
 
 ## Why Your Code Looks Like This
 
-Why does `:=` exist, and why does its scoping feel odd? Because it was the last hill the dictatorship died on. Why do PEPs now end with "the Steering Council accepted…"? February 2019. Why does Python release every October? PEP 602 — a governance reform you can read in your version numbers.
+Why does `:=` exist, and why does its scoping feel odd? Because it was the last hill the dictatorship died on — an operator expensive enough that the man who approved it resigned. Why do PEPs now end with "the Steering Council accepted…" instead of a pronouncement from one person? February 2019. Why does Python release every October, on schedule, like clockwork? PEP 602 — a governance reform you can read in your version numbers.
+
+Most languages carry their history in their syntax. Python also carries it in its bylaws.
 
 ## Sources
 

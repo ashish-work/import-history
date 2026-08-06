@@ -13,7 +13,7 @@ import Verify from '../../components/Verify.astro';
 import GilMachine from '../../components/GilMachine.astro';
 import GenealogyTree from '../../components/GenealogyTree.astro';
 
-{/* Draft prose by Claude, built strictly from content-outline.md. Review before publishing. */}
+{/* Expanded draft — review before publishing. */}
 
 <ColdOpen
   stamp="PyCon Atlanta, February 2010."
@@ -22,29 +22,51 @@ import GenealogyTree from '../../components/GenealogyTree.astro';
 
 ## The World
 
-In March 2005, Herb Sutter published "The Free Lunch Is Over" in Dr. Dobb's Journal. The argument: clock speeds have stalled; from now on, the future is cores. For fifteen years, slow software had simply waited for faster chips. That subsidy just ended.
+Hold that image — a room full of Python programmers staring at a graph that shouldn't exist. Two threads. Two cores. Slower than one. To understand why nobody laughs, you have to rewind five years.
 
-The hardware followed on schedule. Intel's Core Duo shipped in January 2006, and by 2008 every laptop was multicore. Python's founding assumption from 1991 — one core per machine, so one big lock costs nothing — broke overnight. Nobody changed a line of Python; the machines changed underneath it.
+In March 2005, Herb Sutter publishes an essay in Dr. Dobb's Journal called "The Free Lunch Is Over." The free lunch was this: for fifteen years, if your software was slow, you waited. Clock speeds doubled on schedule, and last year's sluggish program became this year's snappy one without anyone touching the code. Sutter's argument is that the party has ended. Chips have hit a wall of heat and physics. Clock speeds have stalled. From now on, the extra transistors go into more cores, not faster ones — and software that can't use multiple cores will simply stop getting faster. Forever.
 
-Then, in November 2009 at JSConf EU, Node.js arrived, selling single-threaded async as a brand. Suddenly Python's web story had outside competition wearing its own old clothes.
+The hardware keeps his schedule. Intel's Core Duo ships in January 2006. By 2008, every laptop is multicore.
+
+Here is why that is a Python problem specifically. CPython manages memory by reference counting: every object carries a little counter of how many things point at it, and when the counter hits zero, the object is freed. It's simple and prompt — and it is emphatically not thread-safe. Two threads bumping the same counter at the same instant can corrupt it, and a corrupted count means memory freed while in use, or never freed at all. Rather than wrap every counter in its own lock, Python took out one big lock on the whole interpreter: the Global Interpreter Lock. Only the thread holding the GIL may execute Python bytecode. Everyone else waits.
+
+In 1991, this was not a compromise; it was the correct engineering call. Every machine had one core. One lock, passed hand to hand, cost essentially nothing, and it kept the interpreter simple and single-threaded code fast. The GIL wasn't a bug. It was a bet on the hardware — and for fifteen years, the hardware paid out.
+
+Then the machines changed underneath it. Nobody altered a line of Python, and overnight the founding assumption — one core per box — was false on every desk in the industry.
+
+And the pressure isn't only coming from silicon. In November 2009, at JSConf EU, Node.js arrives — selling single-threaded, event-driven async as a brand, the hot new thing for web servers. The pitch is essentially Python's own old clothes, worn better. Suddenly Python's web story has outside competition, and a clock.
 
 ## The Pressure
 
-The GIL went from footnote to villain. On a multicore machine, CPU-bound Python simply cannot scale up — the second core sits dark while the lock passes hand to hand. Meanwhile the web tier needed C10K-class concurrency; Twisted existed, but its callback style split the community into those who would contort their code and those who refused.
+The GIL goes from footnote to villain. For most of Python's life, it had been trivia — a comment in the C source, a shrug in the FAQ. Now it's arithmetic. On a four-core machine, a CPU-bound Python program uses one core. The other three sit dark while the lock passes hand to hand. Buy a bigger box; watch the same fraction of it idle. The language that was easy to write has become structurally unable to use the computer you bought.
+
+The web tier feels a different squeeze. The C10K problem — one machine, ten thousand simultaneous connections — had already established that you cannot answer that kind of load with one operating-system thread per connection; the threads alone would drown the box. Python has an answer: Twisted, the event-driven framework. But Twisted asks you to write your program inside-out, as chains of callbacks — functions handed to the framework to be called later, whenever the I/O finishes. Some programmers contort their code willingly. Many refuse. The community splits along that line, and the split will outlive everyone's patience.
+
+So there's the vise: CPU work can't scale up because of the lock, and network work can't scale out without a style war. Features are lagging indicators of pressure — and the pressure is now arriving from the hardware, the workload, and the competition all at once.
 
 ## The Response
 
-The community didn't route around the GIL once. It did it three ways simultaneously.
+The community doesn't route around the GIL once. It does it three ways simultaneously — sidestep it, hide it, fix it — and each escape route leaves a different scar on the code you write today.
 
-**Sidestep it — processes.** `multiprocessing` landed in 2.6 and 3.0 in 2008 (PEP 371, adopted from the pyprocessing package). Be clear about what it is: not a fix, a workaround — with serialization taxes on every object crossing the boundary. It's also why a decade of tutorials cargo-cult `if __name__ == "__main__":` without explaining it.
+**Sidestep it — processes.** If threads must share one lock, stop sharing. Give each unit of work its own process — its own interpreter, its own memory, its own GIL — and let the operating system spread the processes across cores. That's `multiprocessing`, which lands in Python 2.6 and 3.0 in 2008 via PEP 371, adopted from the pyprocessing package. The trick is that it wears `threading`'s API: swap a class name and your thread pool becomes a process pool.
 
-**Hide it — implicit green threads.** greenlet, extracted from Stackless ideas by Armin Rigo, begat eventlet — begun by Bob Ippolito in 2006, then developed and open-sourced at Linden Lab to run Second Life — which begat gevent, Denis Bilenko's 2009 monkey-patch-the-world answer: blocking code that doesn't block. Tornado, open-sourced by FriendFeed in September 2009, staked out the pragmatic middle path.
+Be clear about what it is: not a fix, a workaround — with taxes. Processes don't share memory, so every object crossing between them must be serialized: flattened into bytes, shipped across, rebuilt on the far side. Hand a worker a big data structure and you pay to copy it. Get results back, pay again. For chunky, independent jobs, that's fine. For anything chatty, the serialization tax eats the gain. And the module has one more toll: on some platforms, a child process starts by re-importing your main script — so any code at the top level runs again, in every child, spawning children of its own. The guard that prevents the fork bomb is `if __name__ == "__main__":`, which is why a decade of tutorials cargo-cult that line without ever explaining what it's guarding against.
 
-**Fix the GIL itself — and fail, mostly.** Antoine Pitrou's new GIL (3.2, released February 2011) moved to time-slice scheduling and fixed multicore thrashing — then Beazley's 2010 follow-up exposed the convoy effect with I/O threads. Google's Unladen Swallow (2009) promised a 5x LLVM JIT with a merge plan in PEP 3146, and fizzled — the PEP's withdrawal notice reads "With Unladen Swallow going the way of the Norwegian Blue, this PEP has been deemed to have been withdrawn," and the retrospective followed in March 2011. Psyco was retired in favor of PyPy, which got genuinely fast around 2010–11 and became the perennial "just use PyPy" answer that production mostly doesn't take.
+**Hide it — implicit green threads.** The second route is sleight of hand. An OS thread is heavy machinery: kernel-scheduled, preemptible at any instant, with its own stack. A green thread is a thread-shaped illusion that lives entirely inside your process — thousands of them, feather-light, switching only at moments the runtime chooses, typically when one of them blocks waiting on the network. No kernel, no preemption, and no fighting over the GIL, because at any instant only one is actually running. For servers that mostly wait on I/O — which is most servers — it's exactly the right shape.
+
+The lineage runs through this era like a green vine. greenlet, extracted from Stackless ideas by Armin Rigo, provides the switching primitive. It begets eventlet — begun by Bob Ippolito in 2006, then developed and open-sourced at Linden Lab to keep Second Life's servers running. And eventlet begets gevent, Denis Bilenko's 2009 answer, which adds the audacious part: monkey-patching. Monkey-patching means rewriting a library at runtime — reaching into the standard library while the program loads and swapping the blocking functions, sockets and sleeps and all, for cooperative green-thread versions. Your code still says `socket.recv()`. It still looks like it blocks. It doesn't. Blocking code that doesn't block: you get the scaling of an event loop while writing plain, boring Python. The price is that the magic is invisible — your program now context-switches at points you never chose and can't see. File that thought; the fight section will collect it.
+
+Between the purists and the magicians, a middle path: Tornado, open-sourced by FriendFeed in September 2009 — an explicit async web server, no monkey-patches, no Twisted-scale framework commitment. The pragmatic option, and plenty of shops take it.
+
+**Fix the GIL itself — and fail, mostly.** The third route goes at the lock head-on. Antoine Pitrou rebuilds the GIL for Python 3.2, released February 2011. The old lock's scheduling on multicore machines had degenerated into thrashing — threads on different cores burning CPU fighting over the lock itself. The new GIL switches to time-slice scheduling and fixes the thrash. Then Beazley comes back with a 2010 follow-up and exposes the convoy effect: put one CPU-hungry thread next to an I/O thread, and the I/O thread — which only ever needs the lock for a moment — keeps waking up, requesting the lock, and queuing behind the hog that holds it for a full slice. Like cars trapped behind one slow truck, quick little requests convoy behind long-running work, and I/O latency craters. The new GIL is better and still not good.
+
+Money takes a swing too. Google's Unladen Swallow, announced in 2009, promises a 5x speedup via an LLVM just-in-time compiler, with a merge plan written into PEP 3146. By 2011 it has fizzled; the PEP's withdrawal notice reads "With Unladen Swallow going the way of the Norwegian Blue, this PEP has been deemed to have been withdrawn," and the retrospective follows in March 2011. Meanwhile Psyco, Armin Rigo's earlier accelerator, is retired in favor of PyPy — an alternative Python interpreter that gets genuinely fast around 2010–11 and becomes the perennial "just use PyPy" answer that production, needing its C extensions and its known quantities, mostly doesn't take.
+
+Score at the end of the era: the sidestep ships, the hiding trick ships, the fix fails. The lock survives.
 
 ## The Fight
 
-The fight had a professor. Beazley's "Inside the Python GIL" (ChiPy, 2009) and "Understanding the Python GIL" (PyCon 2010) did what nobody had bothered to do in nineteen years: instrument the lock and show the room what it actually did.
+The fight has a professor. David Beazley teaches Python for a living, and in 2009 he does what nobody had bothered to do in nineteen years: he instruments the lock. "Inside the Python GIL," delivered at ChiPy in Chicago, traces exactly what the interpreter does when two threads want the lock — and the traces are damning. The PyCon 2010 sequel, "Understanding the Python GIL," is the cold open of this episode: graphs of a two-thread program running slower on two cores than one, because the threads on separate cores are spending their time signaling each other about the lock rather than working. The room goes quiet because everyone present has written that program.
 
 <ArchiveCard
   from="David Beazley"
@@ -59,7 +81,9 @@ The fight had a professor. Beazley's "Inside the Python GIL" (ChiPy, 2009) and "
   href="https://www.dabeaz.com/GIL/"
 />
 
-On python-dev, the new-GIL threads and the convoy-effect bug report — [bpo-7946](https://bugs.python.org/issue7946), filed by Beazley in February 2010 and never resolved — carried the technical argument. In the community at large, the gevent-versus-Twisted flame threads carried the ideological one: implicit versus explicit, round one. Round two is episode 6.
+On python-dev, the new-GIL threads and the convoy-effect bug report carry the technical argument. Beazley files [bpo-7946](https://bugs.python.org/issue7946) in February 2010, documenting the convoy effect against Pitrou's new GIL. It is never resolved. It just sits there, open, for years — a lit exhibit in the museum of known problems.
+
+In the community at large, the ideological argument rages instead: the gevent-versus-Twisted flame threads. Implicit versus explicit — should the places where your program can be interrupted be invisible, as gevent makes them, or spelled out in the code, as Twisted demands? It sounds like a style question. It's actually a question about what you can trust when you read a function. This is round one. Round two, with new weapons and the same two armies, is episode 6.
 
 <ArchiveCard
   from="David Beazley (dabeaz)"
@@ -78,7 +102,11 @@ On python-dev, the new-GIL threads and the convoy-effect bug report — [bpo-794
 
 ## Why Your Code Looks Like This
 
-Why does `threading` exist but nobody trusts it for CPU work? This episode. Why does `multiprocessing` exist at all? This episode. Why did every Python shop of the 2010s carry either a gevent scar or a Twisted scar? This episode. And why is the GIL the first thing interviewers ask about? Because for one decade, it was the most consequential thing in the language nobody had chosen.
+Why does `threading` exist but nobody trusts it for CPU work? This episode: the threads are real, the parallelism isn't, and everyone who benchmarked it once carries the memory. Why does `multiprocessing` exist at all — and why does every script that uses it wear the `if __name__ == "__main__":` amulet? This episode: it's the sidestep, taxes and fork-guard included. Why did every Python shop of the 2010s carry either a gevent scar or a Twisted scar? Because those were the two ways to survive the web tier, and each one cost something — invisible context switches on one side, inside-out code on the other — and you don't forget which price you paid.
+
+And why is the GIL the first thing interviewers ask about? Because for one decade it was the most consequential thing in the language nobody had chosen. It was a 1991 bet on hardware that 2006 hardware voided, and the community's three escape routes — sidestep, hide, fix — are all still visible in the standard library, in production stacks, in the questions asked across interview tables. Features lag pressure. So do scars.
+
+The fix failed this time. Keep the failure in mind, because the lock's story isn't over — and the road to its eventual removal runs, of all places, through an accidental gift. Next episode.
 
 ## Sources
 

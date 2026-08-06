@@ -11,7 +11,7 @@ import ColdOpen from '../../components/ColdOpen.astro';
 import ArchiveCard from '../../components/ArchiveCard.astro';
 import Verify from '../../components/Verify.astro';
 
-{/* Draft prose by Claude, built strictly from content-outline.md. Review before publishing. */}
+{/* Expanded draft — review before publishing. */}
 
 <ColdOpen
   stamp="A newsroom in Lawrence, Kansas, 2003–2005."
@@ -20,42 +20,72 @@ import Verify from '../../components/Verify.astro';
 
 ## The World
 
-The dot-com boom, then the bust. The early web ran on CGI scripts, and the early web belonged to Perl and PHP — while Java claimed everything that called itself a "serious" server. Python was the outsider at both parties.
+Hold that newsroom image. To understand why it matters, you need to see what the web looked like when Python arrived at it — because the web of the late nineties was held together with something called CGI.
 
-Guido's own employment traced the industry's turbulence: CNRI, then BeOpen — five months, May to October 2000, before the startup collapsed — then Zope Corporation from late 2000, then Elemental Security, and finally Google in 2005. Zope itself, open-sourced in 1998, was Python's first killer app, and its commercial success quietly funded core development through the lean years.
+CGI — the Common Gateway Interface — was the first widely adopted way to make a web page *do* something. The recipe was brutally simple: when a request came in, the web server launched a brand-new program, handed it the request, waited for the program to print out a page, and then threw the program away. One request, one process, every single time. It worked. It was also, as traffic grew, spectacularly wasteful — and that waste is a pressure we'll be watching for the rest of this episode.
+
+In that world, Python was the outsider at both parties. The scripting party belonged to Perl and PHP, the languages that actually owned the early web's CGI scripts and page templates. The enterprise party belonged to Java, which had claimed everything that called itself a "serious" server. Python — the readable teaching language from episode 1 — had no obvious seat at either table.
+
+Meanwhile the dot-com boom inflated, and then it burst. You can read the whole turbulence of the era in one man's employment history. Guido van Rossum left CNRI for a startup called BeOpen — which lasted five months, May to October 2000, before collapsing. From there he went to Zope Corporation in late 2000, then to Elemental Security, and finally, in 2005, to Google. Four employers in five years. The industry was churning, and Python's creator churned with it.
+
+Zope itself deserves a beat. Open-sourced in 1998, it was Python's first killer app — a web application platform that gave companies a commercial reason to bet on the language. Its success did something less visible and more important: it quietly funded core Python development through the lean years after the bust. Python's survival of the dot-com winter was not an accident. It had a patron.
 
 ## The Pressure
 
-Web workloads are strings, requests, templates, and databases — and every one of them pressed on the language. The demand was blunt: make Python a server citizen.
+Strip a web application down to its parts and you get four things: strings, requests, templates, and databases. Every one of them pressed on the language. Python's string handling, its ability to talk to databases, its story for serving requests — all of it was suddenly being stress-tested by people who didn't care about elegance. They cared about shipping. The demand from outside was blunt: make Python a server citizen.
 
-Two outside events sharpened it. Ruby on Rails arrived in 2004 and lit a fire under every dynamic language's web story. And back in 1999, Dan Kegel had given a name to a harder problem — C10K: one machine, ten thousand simultaneous connections. Threads won't cut it. That name hangs over the next twenty years of this documentary.
+Two outside events sharpened that demand into something urgent.
+
+The first was Ruby on Rails, which arrived in 2004 and lit a fire under every dynamic language's web story. Rails made building a database-backed website look almost embarrassingly easy, and every language community that watched it happen asked the same question: where's ours?
+
+The second was older and stranger. Back in 1999, Dan Kegel had given a name to a problem most people hadn't hit yet: C10K. One machine, ten thousand simultaneous connections. The traditional answer — give every connection its own thread — falls apart at that scale, because ten thousand threads means ten thousand stacks to hold in memory and ten thousand contenders for the scheduler's attention. The machine spends its time juggling instead of working. In 1999 this was an exotic concern. But the name stuck, and it hangs over the next twenty years of this documentary.
 
 ## The Response
 
-Python 2.0, October 2000: list comprehensions — a Haskell import Guido actually liked, in pointed contrast to episode 1's lambda — cycle-detecting garbage collection, the first unicode strings behind `u''`, and something less visible but more consequential: the PEP process itself. Governance shipped as a feature.
+Python's answer came as a drumbeat of releases — and the first one changed how all the others would be decided.
 
-Python 2.2, December 2001, was the intellectual big-bang release: new-style classes unified types and classes, descriptors arrived, iterators (PEP 234) became a protocol, and generators (PEP 255, hidden behind `from __future__`) planted the seed of everything async that follows.
+Python 2.0 landed in October 2000. The headline feature was list comprehensions: a way to build a list by writing, in a single expression, what belongs in it — `[x * 2 for x in numbers]` instead of a loop, an append, and three lines of ceremony. It was an import from Haskell, and here's the wry part: Guido actually liked this one. Episode 1 told the story of `lambda`, `map`, and `filter` — functional features contributed by a Lisp hacker, tolerated by a creator who never warmed to them. Comprehensions were functional programming in a shape Guido found readable, and the contrast tells you everything about how he judged features.
 
-2.4 brought decorators in 2004, after the notorious PEP 318 syntax bake-off. 2.5 brought `with` (PEP 343) — and PEP 342, `generator.send()`, the quiet moment generators became coroutines. Hold that thought until episode 6.
+The same release brought cycle-detecting garbage collection. Python had always freed memory by counting references — when nothing points at an object, it dies. But two objects pointing at *each other* never hit zero, and leaked forever. The new collector hunted those cycles down. And 2.0 shipped the first unicode strings, written `u''` — a small prefix that will detonate an entire episode later in this series.
 
-The web tier assembled around WSGI (PEP 333, 2003), the interface that let Django, Flask, and Pylons interoperate instead of balkanizing. Django emerged from that Lawrence, Kansas newsroom in 2005 alongside TurboGears and Pylons. Google made Python one of its three official languages; YouTube ran on it; Reddit was rewritten onto it from Lisp in 2005.
+The most consequential feature of Python 2.0, though, wasn't in the language at all. It was the PEP process — Python Enhancement Proposals, a formal, public, written procedure for arguing about changes and recording the verdict. Governance shipped as a feature. From here on, every fight in this documentary has a document number.
 
-And the other seed: Stackless Python, Christian Tismer's microthreads experiment from around 1999 — the road CPython didn't take, but one an MMO named EVE Online bet on in 2003. Together with Medusa and asyncore, the ancient event-loop ancestors, both lineages of the coming concurrency war were now planted, twenty years before it ends.
+Then came Python 2.2, in December 2001 — the intellectual big-bang release. New-style classes unified the language's two separate worlds of built-in types and user-defined classes into one system. Descriptors arrived — the machinery underneath that makes things like methods and properties work. Iterators became a protocol (PEP 234): any object could now answer the question "what's next?" — and suddenly loops, dictionaries, and files all spoke one common language of iteration.
+
+And 2.2 carried a stowaway: generators, PEP 255, hidden behind a `from __future__` import like an experiment nobody was sure about. A generator is a function that can pause. Where a normal function runs to the end and is gone, a generator hits `yield`, hands you a value, and freezes mid-stride — stack, local variables, everything — until you ask for the next one. Read that again with C10K in mind: a function that can be suspended and resumed cheaply. This is the seed of everything async that follows.
+
+The drumbeat continued. Python 2.4, in 2004, brought decorators — the `@something` line above a function that wraps it in new behavior — after the notorious PEP 318 syntax bake-off we'll get to below. Python 2.5, in 2006, brought the `with` statement (PEP 343) for managing resources. And it brought PEP 342, which added one small method to generators: `send()`. Now you could pass a value *into* a paused generator. Data flowing out, data flowing in, a function suspended in between — that is a coroutine, a routine that cooperates by yielding control. Almost nobody noticed at the time. Hold that thought until episode 6.
+
+While the language grew, the web tier assembled around a standard. WSGI — PEP 333, 2003 — solved a coordination problem: every Python web framework had been coupled to particular servers, so choosing a framework meant marrying its deployment story. WSGI defined one plain interface between web servers and Python applications. Any server on one side, any framework on the other. Django, Flask, and Pylons could interoperate instead of balkanizing.
+
+And on top of that standard, the frameworks arrived. Django emerged from that Lawrence, Kansas newsroom in 2005, alongside TurboGears and Pylons. Python finally had its answer to Rails — extracted, fittingly, not from a demo but from the deadline pressure of shipping a newspaper's website. The industry noticed. Google made Python one of its three official languages. YouTube ran on it. Reddit was rewritten onto it from Lisp in 2005.
+
+One more thread, easy to miss in 2005 and impossible to miss later. Around 1999, Christian Tismer built Stackless Python — a modified interpreter that could run microthreads: thousands upon thousands of tiny cooperative tasks, far cheaper than operating-system threads. It was the road CPython didn't take. But it wasn't a toy — in 2003, an MMO called EVE Online bet its entire simulated universe on it. And alongside Stackless sat Medusa and `asyncore`, the ancient event-loop ancestors, handling many connections in a single thread by reacting to events.
+
+Count the seeds. Generators: the *explicit* branch, where code visibly marks the places it pauses. Stackless: the *implicit* branch, where the runtime switches tasks invisibly, and blocking code simply doesn't block. Two answers to C10K, planted in the same five years, twenty years before the war between them ends.
 
 ## The Fight
 
-The PEP 318 decorator-syntax threads — the `@` versus list-syntax war — are a perfect low-stakes introduction to how python-dev argues: exhaustively, publicly, and with a decision at the end.
+If you want to learn how python-dev argues, start with a low-stakes war: the PEP 318 decorator-syntax threads.
+
+Everyone agreed on the feature. Wrapping a function in extra behavior was already possible — you called the wrapper *after* the function's body, three screens below its name, where no reader would ever see it. The fight was purely about where the marker should go and what it should look like: the `@` symbol on its own line versus list-style syntax and a bake-off's worth of other candidates. The argument ran exhaustively and publicly — and, crucially, it ended with a decision. That rhythm, fierce debate resolved by verdict, is the PEP process working as designed.
 
 <ArchiveCard
   subject="SOURCE-NEEDED — PEP 318 syntax bake-off thread, python-dev"
   href="https://peps.python.org/pep-0318/"
 />
 
-Meanwhile, in the design arguments over those first unicode strings, a charge was being planted. It detonates in episode 5.
+Meanwhile, a quieter argument was running in the background: the early design debates over those first `u''` unicode strings — how text and bytes should relate, and what the default should be. Nothing exploded. Nothing needed to, yet. But a charge was being planted, and it detonates in episode 5.
 
 ## Why Your Code Looks Like This
 
-Why does `@decorator` look like that? Because a mailing list fought a syntax war and that symbol won. Why does `dict.items()` behave the way it does? The iterator protocol of 2.2. Why is there a `with` statement instead of `try/finally` everywhere? PEP 343, and a language learning to manage resources on your behalf.
+Why does `@decorator` look like that? Because a mailing list fought a syntax war, a bake-off was held, and that symbol won. The line sits directly above the function it modifies so that you see the wrapping the moment you read the name — the whole point of the fight.
+
+Why does `dict.items()` behave the way it does? Because of 2.2's iterator protocol. Once everything learned to answer "what's next?", dictionaries stopped handing you bulky copies of their contents and started handing you objects you walk through, one step at a time.
+
+Why is there a `with` statement instead of `try/finally` scattered everywhere? PEP 343. Opening a file, taking a lock, and connecting to a database all share one shape — acquire, use, release even if things go wrong — and the language grew a statement that manages that shape on your behalf.
+
+And why do generators — humble `yield`, quiet little `send()` — matter so much? You'll find out. Two seeds are in the ground now. Episodes 3 and 6 are what grows.
 
 ## Sources
 

@@ -12,7 +12,7 @@ import ArchiveCard from '../../components/ArchiveCard.astro';
 import Verify from '../../components/Verify.astro';
 import GiftDiagram from '../../components/GiftDiagram.astro';
 
-{/* Draft prose by Claude, built strictly from content-outline.md. Review before publishing. */}
+{/* Expanded draft — review before publishing. */}
 
 <ColdOpen
   stamp="A quant desk at AQR Capital, 2008."
@@ -21,33 +21,41 @@ import GiftDiagram from '../../components/GiftDiagram.astro';
 
 ## The World
 
-MATLAB licenses cost thousands of dollars per seat, and academics were priced out. Fortran and C were fast and hostile. Between them sat the "two-language problem": prototype in something humane, then rewrite everything in something fast — twice the work, twice the bugs.
+Start with the price tag. In the early 2000s, if you want to do serious numerical computing with a humane interface, you buy MATLAB — and MATLAB licenses cost thousands of dollars per seat. For a hedge fund, that's a rounding error. For a graduate student, a postdoc, a lab running on grant money, it's a wall. Academics are priced out of the tool built for them.
 
-The demand was real and institutional: astronomy at the Hubble's science institute, physics labs everywhere — all needing array computing on a budget.
+The free alternatives sit at the other extreme. Fortran and C are fast — genuinely, gloriously fast — and hostile to everyone who isn't a career programmer. You don't sketch an idea in Fortran. You commit to it.
+
+Between the expensive tool and the hostile ones sits a trap with a name: the "two-language problem." You prototype in something humane, where you can think — then, when the prototype works, you rewrite everything in something fast. Twice the work. Twice the bugs. And a subtler cost: the person who understands the science and the person who can write the C are often not the same person, so every rewrite is also a translation, and translations lose things.
+
+This isn't a hobbyist's complaint. It's institutional. The astronomers running the Hubble Space Telescope's science institute need to push enormous arrays of pixel data through pipelines. Physics labs everywhere need the same. And they need it on a budget — which rules out the license fees, and rules out hiring a Fortran specialist for every grad student with an idea.
 
 ## The Pressure
 
-What scientists needed was specific: interactive exploration, fast arrays, plotting, and a language you could teach a grad student in a week. Here's the strange part — nobody built Python for this. The pressure found the language.
+Write down what a working scientist actually needs, and it's a strangely specific list. Interactive exploration — type an expression, see the answer, adjust, repeat, because science is a conversation with data, not a batch job. Fast arrays — millions of numbers crunched in bulk, not one at a time. Plotting — because a result you can't see is a result you can't trust. And a language you can teach a grad student in a week, because the grad student is there to do astronomy, not computer science.
+
+Here is the strange part, and it's the part this whole site turns on: nobody built Python for this. Guido wasn't thinking about telescopes. There was no grand plan to win science. The pressure found the language.
 
 ## The Response
 
-The scientific stack assembled itself one defection at a time.
+The scientific stack assembled itself one defection at a time — each layer built by someone who walked away from another tool and brought what they missed with them.
 
-**Arrays.** Jim Hugunin's Numeric (1995) split when the Space Telescope Science Institute built numarray in the early 2000s — until Travis Oliphant began the unification in early 2005, culminating in NumPy 1.0 in late 2006. Mark this: a community schism, healed. Remember it during episode 5.
+**Arrays.** First, what an array library even is. Plain Python stores a list of a million numbers as a million separate objects, scattered across memory, each one touched individually by the interpreter — one of the slowest possible ways to do arithmetic. An array library stores those numbers the way C or Fortran would: one contiguous block of raw values, operated on by compiled loops. You write one line of Python; the machine does a million operations at full speed. That's the foundation everything else stands on — and Python nearly fumbled it. Jim Hugunin's Numeric (1995) was the original, but it split when the Space Telescope Science Institute — the Hubble people, with Hubble-sized data — built their own competing library, numarray, in the early 2000s. For years the scientific community had two incompatible array types at its very base. Then Travis Oliphant decided to fix it. Beginning in early 2005, he unified the two lineages into a single library, culminating in NumPy 1.0 in late 2006. Mark this: a community schism, healed by one person doing the unglamorous merge work. Remember it during episode 5, when Python itself splits and takes twelve years to heal.
 
-**Plotting.** matplotlib (2003), built by John Hunter — a MATLAB refugee doing epilepsy research. He died in 2012; NumFOCUS named its award for him.
+**Plotting.** matplotlib (2003) is the defection story in its purest form. John Hunter was a MATLAB refugee doing epilepsy research — a scientist who needed his plots, left the expensive tool, and rebuilt the plotting layer he missed, in Python, for everyone. He died in 2012; NumFOCUS named its award for him. Every chart you've ever squinted at in a paper or a data-science blog post likely descends from his grief with a license server.
 
-**Interactivity.** IPython began in 2001 as Fernando Pérez's physics-PhD procrastination project. It became the Notebook in 2011, then Jupyter in 2014–15 — the lab notebook that became the industry's default interface.
+**Interactivity.** IPython began in 2001 as Fernando Pérez's physics-PhD procrastination project — a better interactive prompt, built by a student who was supposed to be doing physics. That shell grew into the Notebook in 2011: code, results, plots, and prose interleaved in a single document, the centuries-old lab notebook reborn as software. By 2014–15 it had become Jupyter — and the lab notebook became the industry's default interface. The procrastination project outlived the thesis.
 
-**Tables.** pandas, open-sourced 2009–10; McKinney's "Python for Data Analysis" (2012) converted an industry.
+**Tables.** Arrays are grids of uniform numbers, but real-world data is messier: columns of dates next to columns of prices next to columns of names, with holes where values are missing. That's what pandas handles — and it comes straight from the cold open. Wes McKinney, on a quant desk at AQR in 2008, frustrated with the tools, building his own way to wrangle financial tables in Python. pandas was open-sourced in 2009–10, and McKinney's book "Python for Data Analysis" (2012) did the rest — it converted an industry. Finance's frustration became everyone's spreadsheet-killer.
 
-**Machine learning.** scikit-learn — begun as David Cournapeau's Google Summer of Code project in 2007, first public release by the INRIA team on February 1, 2010 — whose fit/predict API design later frameworks would imitate.
+**Machine learning.** scikit-learn began as David Cournapeau's Google Summer of Code project in 2007 and got its first public release from the INRIA team on February 1, 2010. Its lasting contribution is almost embarrassingly simple: every model, no matter how exotic the math inside, exposes the same two verbs — fit, then predict. Swap a decision tree for a neural network and your code barely changes. That API design became the grammar later frameworks would imitate.
 
-**Packaging the pain away.** Compiled extensions were hell to install, so Anaconda and conda arrived in 2012 (Continuum — Oliphant and Peter Wang), wheels standardized binaries the same year (PEP 427), and Cython (2007, out of Pyrex from 2002) became the on-ramp for C-glue.
+**Packaging the pain away.** Now the tax bill for all of the above. Every one of these libraries is a thin Python shell around compiled C and Fortran — which means installing them meant compiling them. On your machine. With the right compilers, the right Fortran runtime, the right linear-algebra libraries to link against, on whatever operating system you happened to have. For a scientist, "pip install" too often ended in a screen of linker errors — a hazing ritual that stopped adoption cold. Two answers arrived in the same year. Anaconda and conda (2012, from Continuum — Oliphant again, with Peter Wang) shipped the entire scientific stack pre-compiled, one installer, no compiler required. And wheels (PEP 427, also 2012) gave Python's own packaging a standard format for pre-built binaries, so eventually plain pip could do the same. Meanwhile Cython (2007, grown out of Pyrex from 2002) became the on-ramp in the other direction — a Python-like dialect that compiles to C, letting scientists write their own fast extensions without becoming C programmers.
+
+Look at the list again. A telescope institute, an epileptic-seizure researcher, a procrastinating physicist, a frustrated quant, a summer-of-code student. Nobody in charge. A stack anyway.
 
 ## The Fight
 
-The Numeric-versus-numarray split threads, and the unification that followed, are the counter-example this documentary keeps in its pocket: schism done right.
+The Numeric-versus-numarray split threads, and the unification that followed, are the counter-example this documentary keeps in its pocket: schism done right. Two array libraries, two communities, real technical disagreements — resolved not by a committee ruling but by one person absorbing both designs and shipping the synthesis. Oliphant told the story himself, in the book he wrote to document the result.
 
 <ArchiveCard
   from="Travis Oliphant"
@@ -58,15 +66,17 @@ The Numeric-versus-numarray split threads, and the unification that followed, ar
 "In early 2005, I decided to begin an effort to help bring the diverging community together under a common framework."
 </ArchiveCard>
 
-The louder fight was R versus Python, argued across the data-science internet as Kaggle competitions tilted toward Python — by [2015–16, Python had pulled ahead](https://r4stats.com/2017/04/04/kaggle/) among competitors.
+The louder fight was external: R versus Python, argued across the data-science internet for the better part of a decade. R was the statisticians' language, purpose-built, beloved. Python was the generalist crashing the party with a borrowed stack. The scoreboard that mattered was Kaggle, the machine-learning competition platform, and as its competitions accumulated the tilt became visible — by [2015–16, Python had pulled ahead](https://r4stats.com/2017/04/04/kaggle/) among competitors. The generalist won, and the reason it won is the subject of the next section.
 
 ## Why Your Code Looks Like This
 
-This is the thesis chapter. Here is the mechanism, stated plainly: **C extensions release the GIL.** When NumPy dives below the lock into compiled code, other threads run. The meter climbs.
+This is the thesis chapter, so let's earn it. You know from episode 3 that the GIL — the Global Interpreter Lock — lets only one thread execute Python bytecode at a time, which is why threaded Python code couldn't use a multicore machine. That was the villain's whole crime.
 
-Follow the chain. The GIL forced heavy compute below the line. A world-class C and Fortran ecosystem accreted down there. Science chose Python *because of that ecosystem*. The flaw caused the win.
+Here is the mechanism, stated plainly: **C extensions release the GIL.** The lock exists to protect the interpreter's internal bookkeeping — reference counts, object structures. But when a C extension settles into a long compiled computation on its own raw memory, it isn't touching Python objects at all. It doesn't need the interpreter's protection, so it's allowed to drop the lock, crunch, and pick the lock back up when it returns. When NumPy dives below the lock into compiled code, other threads run. The meter climbs. The lock everyone cursed simply does not apply to the code doing the actual work.
 
-That's why `import numpy as np` is the real Python logo. That's why your "Python" hot loop is actually BLAS. That's why `@` exists as an operator — matrix multiplication, PEP 465: numpy literally got syntax added to the language. The ecosystem now steers the core. Hold that thought until episode 8.
+Now follow the chain, because this is where the accident becomes a gift. The GIL made pure-Python compute a dead end — so anyone who needed speed was forced to push the heavy work down into C and Fortran. Decades of that forcing built a world-class compiled ecosystem below the line: battle-tested numerical code wearing thin, friendly Python interfaces. And when science came shopping — priced out of MATLAB, allergic to raw Fortran — that ecosystem was exactly what it found. Science chose Python *because of that ecosystem*. The flaw caused the win. Nobody planned it. The language's most-hated limitation quietly manufactured its greatest victory.
+
+That's why `import numpy as np` is the real Python logo. That's why your "Python" hot loop is actually BLAS — the Basic Linear Algebra Subprograms, a lineage of numerical routines tuned over decades to the point where they're effectively the speed of the hardware itself. When you multiply two big matrices in NumPy, Python's role is a few microseconds of dispatch; BLAS does everything else. And that's why `@` exists as an operator — matrix multiplication, PEP 465: numpy literally got syntax added to the language. Read that again. A third-party library changed Python's grammar. The ecosystem now steers the core. Hold that thought until episode 8, when the ecosystem the GIL built comes back — with money — to remove the GIL itself.
 
 <GiftDiagram />
 

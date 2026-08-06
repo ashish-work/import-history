@@ -11,7 +11,7 @@ import ColdOpen from '../../components/ColdOpen.astro';
 import ArchiveCard from '../../components/ArchiveCard.astro';
 import Verify from '../../components/Verify.astro';
 
-{/* Draft prose by Claude, built strictly from content-outline.md. Review before publishing. */}
+{/* Expanded draft — review before publishing. */}
 
 <ColdOpen
   stamp="PyCon 2013, a hallway conversation."
@@ -20,29 +20,49 @@ import Verify from '../../components/Verify.astro';
 
 ## The World
 
-Docker in 2013. Kubernetes in 2014. Microservices, SaaS everywhere — and Go 1.0 (2012) starting to eat Python's ops niche while Node's async model owned the "modern server" narrative.
+Hold that hallway scene for a moment, because it's the whole episode in miniature. A researcher arrives with a new language. Python's creator doesn't argue with him. He redirects him. Don't replace Python — check it. A language famous for refusing static types has just, quietly, in a corridor, changed its mind. The rest of this episode is that decision working itself out in public.
 
-Meanwhile Python codebases crossed a threshold nobody had planned for: a million lines. Dropbox — where Guido himself landed in 2013. Instagram's Django monolith, serving a billion users. OpenStack. Scripts had become systems, and the language was still dressed for scripting.
+Look at what's happening outside the corridor. Docker ships in 2013 and turns deployment into something you can put in a box. Kubernetes follows in 2014 and turns the boxes into fleets. Microservices are the new orthodoxy; SaaS is everywhere; every company is suddenly running dozens of small servers instead of one big one. And two rivals are circling. Go 1.0 lands in 2012 and starts eating Python's ops niche — the deploy scripts, the infrastructure glue. Node's async model owns the "modern server" narrative, the story about what a fast, concurrent, contemporary backend is supposed to look like.
+
+Meanwhile, inside Python shops, the codebases have crossed a threshold nobody planned for: a million lines. Dropbox — where Guido himself lands in 2013. Instagram's Django monolith, serving a billion users. OpenStack. These aren't scripts anymore. They're systems, with teams and tenure and turnover. And the language they're written in is still dressed for scripting.
 
 ## The Pressure
 
-Untyped Python at scale means refactoring fear, onboarding cost, and the daily question "what does this function take?" Types arrived as pressure from codebase size, not fashion.
+Here is what a million untyped lines feels like from the inside. You open a function someone wrote four years ago. It takes an argument called `data`. What is `data`? A dict? A list of dicts? An object that merely resembles a dict on Tuesdays? The person who knew has left the company. Your options are archaeology or prayer.
 
-And async needed a standard. The gevent-versus-Twisted-versus-Tornado fragmentation — episode 3's unresolved war — was still splitting the ecosystem three ways.
+Multiply that by every function, every refactor, every new hire, and you get the pressure in its purest form: refactoring fear, onboarding cost, and the daily question "what does this function take?" This is why types arrived when they did — pressure from codebase size, not fashion. Nobody at Dropbox wanted Python to feel like Java. They wanted to rename a method without holding their breath.
+
+The second pressure was older. Async needed a standard. Episode 3's concurrency war had ended without a winner, and the ecosystem was still split three ways — gevent versus Twisted versus Tornado — each with its own event loop, its own idioms, its own libraries that refused to talk to the others. Three incompatible answers to the same question is worse than one imperfect answer. The language had to pick.
 
 ## The Response
 
-**The typing arc.** Annotations had existed since 3.0 with no semantics at all (PEP 3107) — syntax waiting for a purpose. mypy, Jukka Lehtosalo's redirected thesis project, gave them one. PEP 484 made gradual typing official in 3.5 (2015). Then variable annotations (3.6), dataclasses (3.7, attrs-inspired), Protocols (PEP 544, 3.8). Facebook, Google, and Microsoft each built their own checker — pyre, pytype, pyright — and typeshed became a commons. Types became an industry.
+**The typing arc.** The strange part is that Python already had the syntax. Annotations had existed since 3.0 — PEP 3107 let you write a colon and an expression after any function argument, and then did precisely nothing with it. No checking, no enforcement, no meaning. It was a gift with no purpose attached: a place in the grammar where meaning could someday live. For years it just sat there.
 
-**The async arc.** `yield from` (PEP 380, 3.3), then Guido's own tulip experiment, then asyncio in 3.4, then the real keywords — async/await, PEP 492, in 3.5, driven by Yury Selivanov. Async generators in 3.6, contextvars in 3.7, uvloop underneath. Then the framework story caught fire: ASGI (Andrew Godwin), Starlette and uvicorn in 2018, and FastAPI the same year — async finally got its Rails moment.
+mypy — Jukka Lehtosalo's redirected thesis project, the one from the hallway — gave the empty syntax a job. And PEP 484 made the arrangement official in Python 3.5, in 2015, under a carefully chosen banner: gradual typing.
 
-**Quality of life.** 3.6 brought f-strings (PEP 498) and ordered dicts — an implementation detail promoted to a guarantee in 3.7. Call it the "Python got nice" release.
+Gradual typing is worth pausing on, because it's the political innovation as much as the technical one. In a fully static language, everything must be typed before anything runs. In a fully dynamic one, nothing can be. Gradual typing says: annotate what you want, when you want; anything unannotated stays dynamic; the checker verifies the parts you've labeled and shrugs at the rest. Your million-line codebase doesn't have to convert. It can grow types the way a city grows plumbing — street by street, while everyone keeps living there. Crucially, the runtime still ignores every annotation. Type hints are a conversation between you and a checker, not between you and the interpreter.
 
-**The counterculture.** curio (Beazley, again) and trio (Nathaniel Smith, 2017) argued the stdlib had standardized the wrong design, and the 2018 essay "Go statement considered harmful" made the structured-concurrency case — vindicated years later when TaskGroups and ExceptionGroups landed in 3.11.
+The arc accelerates from there. Variable annotations in 3.6. Dataclasses in 3.7, learning openly from the attrs library. Protocols — PEP 544, in 3.8 — which let the checker match types by shape rather than by inheritance, blessing the duck typing Python programmers had practiced all along. And industry moved in: Facebook built pyre, Google built pytype, Microsoft built pyright. Types became an industry, and typeshed — the shared repository of annotations for the standard library and beyond — became a commons.
+
+**The async arc.** The parallel plot line moves in lockstep, one release at a time. `yield from` arrives in 3.3 via PEP 380 — plumbing that lets one generator delegate to another, which sounds like trivia until you realize it's exactly what you need to build coroutines that call coroutines. Then Guido writes the framework himself. The experiment is called tulip, and it lands in 3.4 as asyncio — the standard library's official answer to the event-loop question, the treaty ending episode 3's three-way war.
+
+But asyncio-on-generators was a costume. Coroutines were dressed up as generators, and you had to squint to tell them apart. PEP 492, driven by Yury Selivanov, gives them their own clothes in 3.5: `async def` declares a coroutine, `await` marks the exact point where it may pause. That visibility is the entire philosophy. In gevent's world, any function might secretly yield control mid-flight. In asyncio's world, every suspension point is written down. You can read a function and know precisely where the world is allowed to change underneath you.
+
+The ecosystem fills in around the keywords: async generators in 3.6, contextvars in 3.7, uvloop making the loop fast underneath. Then the framework story catches fire. Andrew Godwin designs ASGI — the async successor to the old WSGI contract between servers and applications. Starlette and uvicorn build on it in 2018. And FastAPI, the same year, stacks the episode's two arcs on top of each other: type-annotated function signatures that drive an async web framework. Async finally gets its Rails moment.
+
+**Quality of life.** Amid the grand strategy, 3.6 brings f-strings (PEP 498) and ordered dictionaries — the latter an implementation detail promoted to a language guarantee in 3.7. Call it the "Python got nice" release. Sometimes a language earns loyalty with keywords; sometimes it earns it by making string formatting stop hurting.
+
+**The counterculture.** Not everyone salutes. David Beazley — the man who put the GIL on stage in episode 3 — builds curio. Nathaniel Smith releases trio in 2017, and in 2018 writes the movement's manifesto: "Notes on structured concurrency, or: Go statement considered harmful." The argument, deliberately echoing Dijkstra's old crusade against `goto`: spawning a background task that outlives the function that started it is the concurrency version of a jump to nowhere. Nobody owns the task. Errors vanish into the void. Structured concurrency says tasks should live inside a scope, the way code lives inside a block — the parent waits for its children, and their failures come home to it. The stdlib had standardized the wrong design, the argument went. Years later the stdlib partially agreed: TaskGroups and ExceptionGroups landed in 3.11, structured concurrency's ideas absorbed into the thing it critiqued.
 
 ## The Fight
 
-The canon of the color war, in order: Glyph's "Unyielding" (2014) making the pro-explicit case; Nystrom's "What Color Is Your Function?" (2015) naming the cost; Ronacher's asyncio-skeptic posts (2016) itemizing the design debt.
+Every war has its canon. The color war's runs in order, and it's worth reading all three.
+
+First, the case for the winning side. Glyph Lefkowitz publishes "Unyielding" in 2014, the argument for explicit suspension points: when concurrency hides, your reasoning about shared state quietly rots.
+
+Then the cost gets a name. Bob Nystrom's 2015 essay "What Color Is Your Function?" describes a language where functions come in two colors, and the colors are contagious. An async function can only be awaited from another async function — so the moment one function deep in your stack goes async, everything above it must repaint itself, all the way up to `main`. You don't adopt `await` in one corner of a codebase. It climbs. That's what "function color" means, and Nystrom's framing became the standard vocabulary for the trade-off Python had just committed to.
+
+And then the skeptic's ledger. Armin Ronacher spends 2016 itemizing asyncio's design debt from the perspective of someone actually trying to build on it.
 
 <ArchiveCard
   from="Glyph Lefkowitz"
@@ -63,11 +83,21 @@ The canon of the color war, in order: Glyph's "Unyielding" (2014) making the pro
   href="https://lucumr.pocoo.org/2016/10/30/i-dont-understand-asyncio/"
 />
 
-The typing backlash ran in parallel: "this isn't Python anymore" versus the people maintaining a million lines. And one fight refused to end: the PEP 563 versus PEP 649 annotations saga starts here and doesn't resolve until 3.14 — thread the needle to episode 8.
+The typing fight ran in parallel and rhymed with it. "This isn't Python anymore," said one camp, watching signatures sprout brackets. "Come maintain a million lines and say that again," said the other. Both were describing the same feature from different altitudes.
+
+And one fight refused to end on schedule: the PEP 563 versus PEP 649 saga — the question of what annotations should evaluate to, and when — starts in this era and doesn't resolve until 3.14. Thread the needle to episode 8.
 
 ## Why Your Code Looks Like This
 
-Why are there two concurrency models in the stdlib? Because episode 3's war ended in a treaty, not a victory. Why does async color your whole call stack? Nystrom named it; the design chose it. Why are type hints optional-but-everywhere? Gradual typing was the only politically possible typing. And why do FastAPI signatures look like that? Because annotations finally earned their keep.
+Why are there two concurrency models in the standard library — threads over here, `async def` over there? Because episode 3's war ended in a treaty, not a victory. asyncio standardized the explicit camp; the implicit camp survived outside the walls; the stdlib carries both histories.
+
+Why does one `await` repaint your whole call stack? Nystrom named it; the design chose it — deliberately. Visible suspension points were the entire point, and contagion was the price the language agreed to pay for them.
+
+Why are type hints optional-but-everywhere, checked by tools your interpreter has never heard of? Because gradual typing was the only politically possible typing. A mandatory system would have been rejected outright; an optional one seeped into everything.
+
+And why do FastAPI signatures look the way they do — annotations doing double duty as documentation, validation, and API schema? Because syntax that sat meaningless since 3.0 finally earned its keep, twice over, in the same function definition.
+
+Scripts became systems. The language grew types and `await` in self-defense — and if you squint, both features are the same move: making the invisible explicit, because at a million lines, invisible is the one thing you can't afford.
 
 ## Sources
 

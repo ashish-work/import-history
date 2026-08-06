@@ -13,7 +13,7 @@ import Verify from '../../components/Verify.astro';
 import SpeedBars from '../../components/SpeedBars.astro';
 import GilMachine from '../../components/GilMachine.astro';
 
-{/* Draft prose by Claude, built strictly from content-outline.md. Review before publishing. */}
+{/* Expanded draft — review before publishing. */}
 
 <ColdOpen
   stamp="November 2020."
@@ -22,25 +22,49 @@ import GilMachine from '../../components/GilMachine.astro';
 
 ## The World
 
-First, the coronation. In November 2015, TensorFlow picked a Python frontend — because episode 4 had already happened: the numpy idioms, the notebooks, the researchers were all in place. PyTorch followed in 2017, ported from Lua Torch, and carried an explicit lesson: Lua had the better runtime story and lost on ecosystem. Keras, then Hugging Face's transformers (2018–19), then ChatGPT in November 2022. The AI boom runs on Python glue over CUDA.
+First, the coronation.
 
-Then, the bill. Cloud economics turned "Python is slow" from a forum argument into a line item. At Instagram and Dropbox scale, interpreter overhead is priced in dollars.
+In November 2015, Google releases TensorFlow, and it speaks Python. Not because anyone at the core of the language lobbied for it — because episode 4 had already happened. The numpy idioms were the lingua franca of numerical code. The notebooks were on every researcher's laptop. The grad students were already trained. When the biggest company in search needed a frontend for its machine-learning framework, the decision made itself: the audience was standing there, holding Python.
+
+PyTorch arrives in 2017, and it carries a lesson in its luggage. It's ported from Lua Torch, and Lua — by most accounts — had the better runtime story. Faster, lighter, cleaner to embed. It lost anyway. It lost on ecosystem, which is the only axis this series has ever really been about. If you want a one-sentence summary of episodes 1 through 8, it's the Torch port: the runtime doesn't pick the winner; the shelves full of libraries do.
+
+Then the dominoes go quickly. Keras. Hugging Face's transformers library, 2018–19. And in November 2022, ChatGPT — the moment the AI boom stops being an industry story and becomes a civilizational one. Underneath all of it, the same architecture: Python glue over CUDA. Thin orchestration on top, screaming-fast GPU kernels below the line. You've seen this diagram before. It's the Accidental Gift from episode 4, with the C blocks relabeled.
+
+Then, the bill.
+
+Cloud economics did something no benchmark war ever managed: it turned "Python is slow" from a forum argument into a line item. When your code runs on one laptop, interpreter overhead is a shrug. When it runs on an Instagram- or Dropbox-scale fleet, every wasted cycle is multiplied by a hundred thousand machines and printed on an invoice. Someone in finance can now see the interpreter. That changes everything.
 
 ## The Pressure
 
-Two vectors converged on the core at once: AI workloads that want threads — data loaders, serving — hitting the GIL; and general fleet costs demanding a faster interpreter. For the first time in this whole story, the money and the motivation both pointed at the same place.
+Two vectors converge on the core at once, and for the first time in this whole story, they point at the same place.
+
+Vector one: AI workloads want threads. Training and serving pipelines have to keep GPUs fed — data loaders pulling and transforming batches, serving layers juggling requests — and the natural tool for "do several things at once inside one process, sharing memory" is threading. Which is exactly the tool the GIL has quietly hobbled since 1992. The old workaround, multiprocessing, means separate processes that can't share objects without serializing them across a boundary — a tax you pay per batch, forever. The lock that was a footnote in 1992 and a villain in 2010 is now standing between the industry's most expensive hardware and its lunch.
+
+Vector two: fleet cost wants a faster interpreter. Not a research project, not "just use PyPy" — a faster CPython, the one production actually runs.
+
+Here is what's new. In every previous episode, the motivation to fix Python's speed existed but the money didn't, or the money existed but pointed elsewhere. Now the money and the motivation both point at the core. That has never happened before. Watch what happens when it does.
 
 ## The Response
 
 A war on two fronts.
 
-**Front one: make it faster.** "I have a plan to speed up CPython by a factor of five over the next few years. But it needs funding." That was Mark Shannon on python-dev, October 20, 2020 — and Microsoft provided it, funding the Faster CPython team from 2021: Guido, Shannon, Brandt Bucher, and colleagues. The results shipped on cadence: 3.11's specializing adaptive interpreter (PEP 659 — officially "an average of 25% faster than 3.10") with zero-cost exceptions; 3.12's comprehension inlining (PEP 709) and per-interpreter GIL (PEP 684 — Eric Snow's decade-long subinterpreter arc, finally paying off); 3.13's experimental, off-by-default JIT (PEP 744); 3.14's tail-call interpreter and stdlib subinterpreters (PEP 734, as `concurrent.interpreters`). A sober note belongs here: in May 2025, [Microsoft canceled its support for the project and most of the team was laid off](https://discuss.python.org/t/community-stewardship-of-faster-cpython/92153) days before PyCon — the speed work continues, but the funding question has reopened.
+**Front one: make it faster.** "I have a plan to speed up CPython by a factor of five over the next few years. But it needs funding." That was Mark Shannon on python-dev, October 20, 2020 — a public plan with a public price tag, which is not how core Python development had ever worked. Microsoft provided it, funding the Faster CPython team from 2021: Guido, Shannon, Brandt Bucher, and colleagues. Salaried engineers, working full-time, on making the interpreter itself faster.
 
-**Front two: remove the lock.** Recite the lineage: Stein, 1996. The Gilectomy, 2016–17 — Larry Hastings' attempt, dead on the same single-threaded cliff. Then Sam Gross, October 7, 2021: nogil. Biased reference counting, immortal objects, mimalloc, deferred refcounting — the first attempt in a quarter century that didn't tank single-threaded speed. The community deliberated in the open on discuss.python.org; Meta put money on the table mid-debate, pledging three engineer-years conditional on acceptance; the Steering Council announced its intent to accept PEP 703 in July 2023 and formalized the acceptance that October, with a phased, reversible plan. 3.13 shipped the experimental free-threaded build, and PEP 779 made free-threading officially supported in 3.14 (October 2025).
+The results shipped on cadence. 3.11 brought the specializing adaptive interpreter (PEP 659) — officially "an average of 25% faster than 3.10" — plus zero-cost exceptions. The idea behind specialization is worth a minute, because it explains where a quarter of your runtime just went. A generic bytecode instruction like a binary add has to ask, every single time: are these integers? floats? strings? something with a dunder method? The adaptive interpreter watches your code run, notices that this particular addition has seen integers five thousand times in a row, and quietly rewrites the instruction into a specialized version that assumes integers and just adds them — keeping a cheap guard that falls back to the generic path if a string ever shows up. Your code doesn't change. The interpreter learns it.
 
-Now say the full-circle beat out loud. The GIL pushed compute into C (episode 1). The C ecosystem won science (episode 4). Science became AI (this episode). And AI's owners paid to remove the GIL.
+3.12 added comprehension inlining (PEP 709) and a per-interpreter GIL (PEP 684) — the payoff of Eric Snow's decade-long campaign to make subinterpreters real, meaning one process can now hold multiple isolated interpreters, each with its own lock. 3.13 shipped a copy-and-patch JIT compiler (PEP 744) — experimental, off by default, a foundation being poured rather than a speedup being promised. 3.14 brought a tail-call interpreter and put subinterpreters in the standard library (PEP 734, as `concurrent.interpreters`).
 
-**Epilogue.** The pressure never stops; it just changes language. The Rust wave is moving in below the line — ruff, uv, polars, pydantic-core, PyO3 — "the new C." CPython landed official iOS and Android tiers in 3.13, and t-strings (PEP 750) in 3.14. Language features are lagging indicators of industry pressure. Roll credits.
+A sober note belongs here, because a documentary owes you the whole arc: in May 2025, [Microsoft canceled its support for the project and most of the team was laid off](https://discuss.python.org/t/community-stewardship-of-faster-cpython/92153) days before PyCon. The speed work continues — but the funding question, the one Shannon's very first message raised, has reopened.
+
+**Front two: remove the lock.** Recite the lineage, because this is the fourth attempt. Greg Stein, 1996: fine-grained locks, single-threaded performance craters, Guido sets the bar — no single-threaded regression. The Gilectomy, 2016–17: Larry Hastings' attempt, dead on the same cliff. Then, October 7, 2021: Sam Gross posts nogil to python-dev.
+
+What makes nogil different is that it attacks the actual problem. The GIL exists because reference counting — Python's way of knowing when to free an object — isn't thread-safe: two threads bumping the same counter without coordination will corrupt it. The naive fix, making every count atomic, is what killed the earlier attempts; atomic operations are expensive, and Python touches refcounts constantly. Gross's design spends its cleverness on not paying that cost. Biased reference counting gives each object a fast, uncoordinated counter for the thread that owns it — the common case — and a slower, synchronized counter for everyone else. Immortal objects take the things every thread touches constantly — `None`, `True`, small integers — and freeze their refcounts entirely, so there's nothing to fight over. Deferred reference counting skips the bookkeeping for objects like functions and modules that live on every call stack, letting the garbage collector settle the score later. Add mimalloc for thread-safe allocation, and you get the first GIL removal in a quarter century that doesn't tank single-threaded speed. The bar Guido set in the nineties is finally cleared.
+
+What happens next is episode 7's machinery working as designed. No BDFL rules by decree; the community deliberates in the open, in enormous threads on discuss.python.org. Mid-debate, Meta puts money on the table — a pledge of three engineer-years, conditional on acceptance. Then the Steering Council announces its intent to accept PEP 703 in July 2023, and formalizes the acceptance that October 24 — with a phased, explicitly reversible plan, because this community has a scar named episode 5 and refuses to break the world again. 3.13 ships the experimental free-threaded build. PEP 779 makes free-threading officially supported in 3.14, October 2025.
+
+Now say the full-circle beat out loud, because it is the whole series in four moves. The GIL pushed compute into C — that was episode 1, the lock that made pure-Python threading useless for heavy work and drove the heavy work below the line. The C ecosystem won science — that was episode 4, MATLAB refugees and NumPy and the accidental gift. Science became AI — that was this episode's first act, TensorFlow and PyTorch choosing Python because the scientists were already there. And AI's owners paid to remove the GIL. The flaw built the ecosystem; the ecosystem became an industry; the industry funded the fix for the flaw. Thirty-four years, one loop, closed.
+
+**Epilogue.** The pressure never stops; it just changes language. Look below the line today and the new arrivals aren't written in C — ruff, uv, polars, pydantic-core, all riding PyO3. The Rust wave is "the new C": once again, the fast layer accretes underneath a Python surface, and once again nobody planned it. Meanwhile CPython keeps answering pressures as they arrive — official iOS and Android tiers in 3.13, t-strings (PEP 750) in 3.14. Language features are lagging indicators of industry pressure. They always were. Roll credits.
 
 ## The Fight
 
@@ -65,17 +89,19 @@ Now say the full-circle beat out loud. The GIL pushed compute into C (episode 1)
   href="https://discuss.python.org/t/pep-703-making-the-global-interpreter-lock-optional-in-cpython-acceptance/37075"
 />
 
-The community's deepest fear surfaced by name: will there be two Pythons again? The abi and wheel debates — the cp313t builds — were argued explicitly in the shadow of episode 5.
+The community's deepest fear surfaced by name: will there be two Pythons again? It wasn't paranoia — it was arithmetic. A free-threaded interpreter has a different ABI, which means every compiled extension has to be built for it separately: the `cp313t` builds, distinct wheels for the same package on the same Python version. Squint and it looks like the opening frames of episode 5 — an ecosystem split down the middle, libraries waiting for users, users waiting for libraries. The abi and wheel debates were argued explicitly in that shadow, which is precisely why the acceptance came wrapped in phases and an escape hatch.
 
 <ArchiveCard subject="SOURCE-NEEDED — two-Pythons-again / cp313t wheel debate" />
 
-And the two fronts tugged against each other: specialization and free-threading interact, and the tension threads between Faster CPython and nogil are their own genre.
+And the two funded fronts tugged against each other, because their tricks collide. Specialization works by rewriting bytecode in place based on what one thread has observed — cheap and safe when a lock guarantees only one thread runs at a time. Remove the lock, and those adaptive rewrites become shared mutable state: two threads racing through the same function can disagree about what the instruction underneath them currently is. Every optimization the Faster CPython team built on single-threaded assumptions has to be re-derived for a world without them. The tension threads between the two teams are their own genre.
 
 <ArchiveCard subject="SOURCE-NEEDED — specialization vs free-threading tension thread" />
 
 ## Why Your Code Looks Like This
 
-Why does `python3.13t` exist? Why do some wheels ship two builds? Why do your NumPy and PyTorch upgrade notes suddenly mention free-threading? Because "is the GIL gone?" is now a version question, not a yes/no. After thirty-four years, that is what victory looks like.
+Why does `python3.13t` exist — a second binary, one trailing letter of difference? Because free-threading shipped as a separate build, not a flag, so nobody's production broke by surprise. Why do some wheels ship two builds of the same version? Same reason: a free-threaded interpreter needs extensions compiled for it, so the ecosystem carries both while the transition runs. Why do your NumPy and PyTorch upgrade notes suddenly mention free-threading? Because the libraries below the line — the ones the GIL protected for thirty years — now have to declare, one by one, that they're safe without it.
+
+And why is "is the GIL gone?" no longer a yes/no question but a version question — which Python, which build, which year? Because that's what removing a thirty-four-year-old load-bearing lock actually looks like: not a switch flipped, but a slow, phased, reversible handover, argued in public, funded by the industry the lock accidentally built. After thirty-four years, that is what victory looks like.
 
 <GilMachine states={['B', 'C']} />
 

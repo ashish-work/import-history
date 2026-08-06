@@ -64,9 +64,11 @@ const rows = items ?? ['3.10', '3.11', '3.12', '3.13', '3.14'].map((label) => ({
   }
   .cell.fill {
     background: var(--py-yellow);
+  }
+  .speed-wrap.js .cell.fill {
     opacity: 0;
   }
-  .speed-wrap.in .cell.fill {
+  .speed-wrap.js.in .cell.fill {
     animation: seg-on 0.6s steps(6, end) forwards;
   }
   @keyframes seg-on {
@@ -101,5 +103,8 @@ const rows = items ?? ['3.10', '3.11', '3.12', '3.13', '3.14'].map((label) => ({
       }
     });
   }, { threshold: 0.4 });
-  document.querySelectorAll('.speed-wrap').forEach((el) => io.observe(el));
+  document.querySelectorAll('.speed-wrap').forEach((el) => {
+    el.classList.add('js');
+    io.observe(el);
+  });
 </script>

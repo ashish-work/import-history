@@ -13,6 +13,9 @@ const {
 } = Astro.props;
 
 const PROGRESS_BLOCKS = 10;
+const FONTS_HREF =
+  'https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&family=Press+Start+2P&family=VT323&display=swap';
+const ogImage = new URL('/og.png', Astro.site ?? Astro.url);
 ---
 <!doctype html>
 <html lang="en">
@@ -23,10 +26,14 @@ const PROGRESS_BLOCKS = 10;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&family=Press+Start+2P&family=VT323&display=swap"
-    />
+    <link rel="preload" as="style" href={FONTS_HREF} />
+    <link rel="stylesheet" href={FONTS_HREF} media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href={FONTS_HREF} /></noscript>
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage.href} />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
     <title>{title}</title>
   </head>
   <body>
@@ -75,6 +82,7 @@ const PROGRESS_BLOCKS = 10;
         display: flex;
         align-items: center;
         gap: var(--grid);
+        min-height: 44px;
         text-decoration: none;
         color: var(--ink);
       }

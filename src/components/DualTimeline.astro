@@ -188,11 +188,11 @@ const items: Item[] = [
     color: var(--amber);
   }
 
-  /* stepped entrance pop */
-  .tl-row {
+  /* stepped entrance pop — rows hidden only when JS is running */
+  .tl-list.js .tl-row {
     opacity: 0;
   }
-  .tl-row.in {
+  .tl-list.js .tl-row.in {
     animation: tl-pop 240ms steps(3, end) forwards;
   }
   @keyframes tl-pop {
@@ -206,7 +206,7 @@ const items: Item[] = [
     }
   }
   @media (prefers-reduced-motion: reduce) {
-    .tl-row {
+    .tl-list.js .tl-row {
       opacity: 1;
       transform: none;
     }
@@ -214,6 +214,7 @@ const items: Item[] = [
 </style>
 
 <script>
+  document.querySelectorAll('.tl-list').forEach((l) => l.classList.add('js'));
   const rows = document.querySelectorAll('.tl-row');
   const io = new IntersectionObserver(
     (entries) => {

@@ -79,8 +79,10 @@ const { from = 'SOURCE-NEEDED', date = 'SOURCE-NEEDED', subject = 'SOURCE-NEEDED
     white-space: pre-line;
   }
   .source {
-    display: inline-block;
-    margin: 0 calc(var(--grid) * 2) calc(var(--grid) * 2);
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin: 0 calc(var(--grid) * 2) var(--grid);
     color: var(--py-blue);
   }
 </style>

@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap">
+<style>
+  * { margin: 0; box-sizing: border-box; }
+  body {
+    width: 1200px;
+    height: 630px;
+    background: #0b0d10;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .scanlines {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(to bottom, rgba(0,0,0,.35) 0 2px, transparent 2px 6px);
+    opacity: .25;
+  }
+  .vignette {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,.5) 100%);
+  }
+  h1 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 64px;
+    color: #e6eee6;
+  }
+  h1 .cursor { color: #3dff7c; }
+  p {
+    font-family: 'VT323', monospace;
+    font-size: 40px;
+    color: #8a978a;
+  }
+  .stamp {
+    font-family: 'VT323', monospace;
+    font-size: 36px;
+    color: #ffb000;
+  }
+</style>
+</head>
+<body>
+  <span class="stamp">[ AN 8-BIT DOCUMENTARY ]</span>
+  <svg width="192" height="192" viewBox="0 0 24 24" shape-rendering="crispEdges">
+    <g fill="#4b8bbe">
+      <rect x="6" y="3" width="12" height="3"/><rect x="15" y="6" width="3" height="3"/>
+      <rect x="6" y="9" width="12" height="3"/><rect x="6" y="12" width="3" height="3"/>
+      <rect x="6" y="15" width="12" height="3"/><rect x="15" y="18" width="3" height="3"/>
+    </g>
+    <g fill="#ffd43b">
+      <rect x="3" y="3" width="3" height="3"/><rect x="18" y="18" width="3" height="3"/>
+    </g>
+    <rect x="4" y="4" width="1" height="1" fill="#0b0d10"/>
+  </svg>
+  <h1>import history<span class="cursor">▮</span></h1>
+  <p>the fights, the people, and the pressure behind every Python feature</p>
+  <div class="scanlines"></div>
+  <div class="vignette"></div>
+</body>
+</html>

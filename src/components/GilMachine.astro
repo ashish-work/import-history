@@ -101,8 +101,13 @@ const SEGS = Array.from({ length: 10 }); // CPU meter, bottom-up
   }
   figcaption {
     position: relative;
-    min-height: calc(var(--grid) * 12);
+    min-height: calc(var(--grid) * 22);
     padding-top: calc(var(--grid) * 2);
+  }
+  @media (min-width: 640px) {
+    figcaption {
+      min-height: calc(var(--grid) * 14);
+    }
   }
   .cap {
     position: absolute;

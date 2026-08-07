@@ -71,7 +71,7 @@ const posterFor = (slug: string) => posters[`../content/episodes/${slug}.png`]?.
             <span class="ep-years">{e.subtitle ? `${e.subtitle} · ` : ''}{e.years}</span>
             <span class="ep-teaser">{e.teaser}</span>
             <span class={`ep-status ${e.status}`}>
-              {e.status === 'full' ? '▶ WATCH' : '[ IN PRODUCTION ]'}
+              {e.status === 'full' ? '▶ READ' : '[ IN PRODUCTION ]'}
             </span>
           </a>
         </li>
